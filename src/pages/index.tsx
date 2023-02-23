@@ -1,7 +1,5 @@
+import { useState } from 'react';
 import Head from 'next/head';
-import Image from 'next/image';
-import { Inter } from '@next/font/google';
-import styles from '@/styles/Home.module.css';
 
 import Churches from '@/components/Churches/Churches';
 
@@ -16,8 +14,32 @@ export const getStaticProps = async () => {
   };
 };
 
+const buttonsStyle = {
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'space-between',
+};
+
+const titleStyle = {
+  fontSize: '2rem',
+  marginBottom: '2rem',
+  color: '#fff',
+};
+
+const selectStyle = {
+  background: 'transparent',
+  border: '1px solid white',
+  color: '#fff',
+  padding: '8px'
+}
 
 export default function Home({ churches }: { churches: any }) {
+  const [filter, setFilter] = useState<string>('all');
+
+  const handleChange = (e: any) => {
+    setFilter(e.target.value)
+  };
+
   return (
     <>
       <Head>
@@ -27,8 +49,22 @@ export default function Home({ churches }: { churches: any }) {
         <link rel='icon' href='/favicon.ico' />
       </Head>
       <main>
-        <h1>Church Localizer</h1>
-        <Churches churches={churches} />
+        <div className='title-container'>
+          <h1 className='text' style={titleStyle}>Church Localizer</h1>
+          <div className='buttons' style={buttonsStyle}>
+            <button type='button' onClick={() => setFilter('all')}>
+              All Churches
+            </button>
+            <select style={selectStyle} name='range' id='range' onChange={handleChange} value={filter}>
+              <option value="all" disabled>Elige un rango</option>
+              <option value='2'>2km</option>
+              <option value='5'>5km</option>
+              <option value='10'>10km</option>
+              <option value='20'>20km</option>
+            </select>
+          </div>
+        </div>
+        <Churches churches={churches} filter={filter} />
       </main>
     </>
   );
