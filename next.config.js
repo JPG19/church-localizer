@@ -2,7 +2,7 @@
 const nextConfig = {
   reactStrictMode: true,
   images: {
-    domains: ['staticflickr.com', 'bing.com', 'live.staticflickr.com', 'th.bing.com'],
+    domains: ['church-localizer.s3.amazonaws.com'],
   },
   env: {
     googleApiKey: 'my-value',

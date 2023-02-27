@@ -33,6 +33,12 @@ const selectStyle = {
   padding: '8px'
 }
 
+const mainStyle = {
+  maxWidth: '1400px',
+  margin: '0 auto 0 auto',
+  padding: '20px',
+}
+
 export default function Home({ churches }: { churches: any }) {
   const [filter, setFilter] = useState<string>('all');
 
@@ -48,7 +54,7 @@ export default function Home({ churches }: { churches: any }) {
         <meta name='viewport' content='width=device-width, initial-scale=1' />
         <link rel='icon' href='/favicon.ico' />
       </Head>
-      <main>
+      <main style={mainStyle}>
         <div className='title-container'>
           <h1 className='text' style={titleStyle}>Church Localizer</h1>
           <div className='buttons' style={buttonsStyle}>

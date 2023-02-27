@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import { useSession, useSupabaseClient } from '@supabase/auth-helpers-react'
 
 const styles = {
   height: '50px',
@@ -16,8 +15,6 @@ const navStyles = {
 }
 
 const Header = () => {
-  const session = useSession()
-
   return (
     <header style={styles}>
       <nav style={navStyles}>
@@ -27,9 +24,9 @@ const Header = () => {
       <Link href='/contact'>
         Contact
       </Link>
-      {!session ? <Link href='/login'>
+      {/* {!session ? <Link href='/login'>
         Login
-      </Link> : null}
+      </Link> : null} */}
       
       </nav>
     </header>

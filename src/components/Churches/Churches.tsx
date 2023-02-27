@@ -21,10 +21,10 @@ const imageStyle = {
 
 const metadataStyle = {
   padding: '10px',
-  backgroundColor: 'white',
-  color: 'black',
+  color: 'white',
   borderRadius: '0 0 10px 10px',
-  height: '100px',
+  height: '80px',
+  backgroundColor: '#222222'
 };
 
 const calculateDistance = (

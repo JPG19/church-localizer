@@ -2,7 +2,6 @@ import { useState } from 'react';
 import emailjs from "@emailjs/browser";
 import { motion } from "framer-motion";
 
-
 const Contact= () => {
   const [result, setResult] = useState<boolean>(false);
 
@@ -61,7 +60,7 @@ const Contact= () => {
           onSubmit={sendEmail}
           style={formStyle}
         >
-          <h2>Contact Juan Pablo</h2>
+          <h2 style={{ color: 'white' }}>Contact Juan Pablo</h2>
           <label>Name: </label>
           <input type="text" name="fullName" required />
 

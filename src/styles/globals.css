@@ -121,10 +121,18 @@ body,
   overflow-x: hidden;
 }
 
-main {
-  max-width: 1400px;
-  margin: 0 auto 0 auto;
-  padding: 20px;
+.church-swiper .swiper-slide img {
+  height: 400px;
+}
+
+.metadata {
+  text-align: center;
+}
+
+.metadata p {
+  color: #fff;
+  opacity: 0.8;
+  font-size: 1.1rem;
 }
 
 a {
@@ -526,7 +534,15 @@ button.primary,
 }
 
 label {
-  color: darkgrey;
+  color: #fff;
+  font-weight: 800;
+  font-size: 1.2rem;
+}
+
+.flex-container {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
 }
 
 .profileCard > .userInfo > p {
