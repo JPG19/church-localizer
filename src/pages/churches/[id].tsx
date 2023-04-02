@@ -10,8 +10,17 @@ import 'swiper/css/pagination';
 
 import { ChurchType } from '../../components/types';
 
-export const getStaticPaths = async () => {
-  const res = await fetch('http://localhost:3000/api/churches');
+function return_url(context: any) {
+  if (process.env.NODE_ENV === 'production') {
+    return `https://${context.req.rawHeaders[1]}`;
+  }
+  return 'http://localhost:3000';
+}
+
+export const getStaticPaths = async (context: any) => {
+  let url = return_url(context);
+
+  const res = await fetch(`${url}/api/churches`);
   const churches: any = await res.json();
 
   const paths = churches?.map((church: any) => ({
@@ -26,13 +35,10 @@ export const getStaticPaths = async () => {
 
 export const getStaticProps = async (context: any) => {
   const id = context.params.id;
-  const res: any = await fetch(`http://localhost:3000/api/churches`);
-  const churches = await res.json();
-
-  const church = churches?.find((iglesia: any) => {
-    return iglesia?.ChurchId === id;
-  });
-
+  let url = return_url(context);
+  const res = await fetch(`${url}/api/churches/` + id);
+  const church = await res.json();
+  
   return {
     props: {
       church,
