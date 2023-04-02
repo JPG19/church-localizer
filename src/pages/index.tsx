@@ -1,50 +1,6 @@
-import { useState } from 'react';
 import Head from 'next/head';
 
-import Churches from '@/components/Churches/Churches';
-
-export const getStaticProps = async () => {
-  const res = await fetch('http://localhost:3000/api/churches');
-  const churches = await res.json();
-
-  return {
-    props: {
-      churches,
-    },
-  };
-};
-
-const buttonsStyle = {
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'space-between',
-};
-
-const titleStyle = {
-  fontSize: '2rem',
-  marginBottom: '2rem',
-  color: '#fff',
-};
-
-const selectStyle = {
-  background: 'transparent',
-  border: '1px solid white',
-  color: '#fff',
-  padding: '8px'
-}
-
-const mainStyle = {
-  maxWidth: '1400px',
-  margin: '0 auto 0 auto',
-  padding: '20px',
-}
-
-export default function Home({ churches }: { churches: any }) {
-  const [filter, setFilter] = useState<string>('all');
-
-  const handleChange = (e: any) => {
-    setFilter(e.target.value)
-  };
+export default function Home() {
 
   return (
     <>
@@ -54,23 +10,8 @@ export default function Home({ churches }: { churches: any }) {
         <meta name='viewport' content='width=device-width, initial-scale=1' />
         <link rel='icon' href='/favicon.ico' />
       </Head>
-      <main style={mainStyle}>
-        <div className='title-container'>
-          <h1 className='text' style={titleStyle}>Church Localizer</h1>
-          <div className='buttons' style={buttonsStyle}>
-            <button type='button' onClick={() => setFilter('all')}>
-              All Churches
-            </button>
-            <select style={selectStyle} name='range' id='range' onChange={handleChange} value={filter}>
-              <option value="all" disabled>Elige un rango</option>
-              <option value='2'>2km</option>
-              <option value='5'>5km</option>
-              <option value='10'>10km</option>
-              <option value='20'>20km</option>
-            </select>
-          </div>
-        </div>
-        <Churches churches={churches} filter={filter} />
+      <main>
+        <h1>HOME PAGE</h1>
       </main>
     </>
   );

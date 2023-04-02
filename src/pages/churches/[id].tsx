@@ -15,7 +15,7 @@ export const getStaticPaths = async () => {
   const churches: any = await res.json();
 
   const paths = churches?.map((church: any) => ({
-    params: { id: church.ChurchId.toString() },
+    params: { id: church.ChurchId, data: churches },
   }));
 
   return {
@@ -26,8 +26,12 @@ export const getStaticPaths = async () => {
 
 export const getStaticProps = async (context: any) => {
   const id = context.params.id;
-  const res = await fetch(`http://localhost:3000/api/churches/${id}`);
-  const church: any = await res.json();
+  const res: any = await fetch(`http://localhost:3000/api/churches`);
+  const churches = await res.json();
+
+  const church = churches?.find((iglesia: any) => {
+    return iglesia?.ChurchId === id;
+  });
 
   return {
     props: {
@@ -42,12 +46,12 @@ const mainStyle = {
 
 const metadataStyle = {
   paddingTop: '20px',
-}
+};
 
 const titleStyle = {
   fontSize: '2rem',
-  color: 'white'
-}
+  color: 'white',
+};
 
 const Church = ({ church }: { church: ChurchType }) => {
   const { isLoaded } = useLoadScript({
@@ -70,8 +74,6 @@ const Church = ({ church }: { church: ChurchType }) => {
 
   if (!isLoaded) return <div>Loading...</div>;
 
-  console.log('church: ', church);
-
   return (
     <main style={mainStyle}>
       <Swiper
@@ -83,9 +85,8 @@ const Church = ({ church }: { church: ChurchType }) => {
         pagination={{ clickable: true }}
       >
         {church.Images.map((src: string, index) => (
-          <SwiperSlide key={church.ChurchId}>
+          <SwiperSlide key={index}>
             <Image
-              key={index}
               src={src}
               alt={church.Name}
               width={400}
@@ -113,7 +114,8 @@ const Church = ({ church }: { church: ChurchType }) => {
           <input
             style={{ width: 'auto', transform: 'scale(1.5)' }}
             type='checkbox'
-            checked={church.Baptism}
+            disabled={true}
+            defaultChecked={church.Baptism}
           />
         </div>
 
@@ -122,7 +124,8 @@ const Church = ({ church }: { church: ChurchType }) => {
           <input
             style={{ width: 'auto', transform: 'scale(1.5)' }}
             type='checkbox'
-            checked={church.FirstCommunion}
+            disabled={true}
+            defaultChecked={church.FirstCommunion}
           />
         </div>
 
@@ -131,7 +134,8 @@ const Church = ({ church }: { church: ChurchType }) => {
           <input
             style={{ width: 'auto', transform: 'scale(1.5)' }}
             type='checkbox'
-            checked={church.Confirmation}
+            disabled={true}
+            defaultChecked={church.Confirmation}
           />
         </div>
 
@@ -140,7 +144,8 @@ const Church = ({ church }: { church: ChurchType }) => {
           <input
             style={{ width: 'auto', transform: 'scale(1.5)' }}
             type='checkbox'
-            checked={church.Wedding}
+            disabled={true}
+            defaultChecked={church.Wedding}
           />
         </div>
 

@@ -1,0 +1,246 @@
+import { useEffect, useState } from 'react';
+import Image from 'next/image';
+import Link from 'next/link';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Grid, Pagination } from 'swiper';
+
+// Import Swiper styles
+import 'swiper/css';
+import 'swiper/css/grid';
+import 'swiper/css/pagination';
+
+const buttonsStyle = {
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'space-between',
+};
+
+const titleStyle = {
+  fontSize: '2rem',
+  marginBottom: '2rem',
+  color: '#fff',
+};
+
+const selectStyle = {
+  background: 'transparent',
+  border: '1px solid white',
+  color: '#fff',
+  padding: '8px',
+};
+
+const mainStyle = {
+  maxWidth: '1400px',
+  margin: '0 auto 0 auto',
+  padding: '20px',
+};
+
+const slideStyles = {
+  borderRadius: '30px 30px 0 0',
+  height: '400px',
+};
+
+const imageStyle = {
+  width: '100%',
+  height: '250px',
+};
+
+const metadataStyle = {
+  padding: '10px',
+  color: 'white',
+  borderRadius: '0 0 10px 10px',
+  height: '80px',
+  backgroundColor: '#222222',
+};
+
+function error(err: any) {
+  console.warn(`ERROR(${err.code}): ${err.message}`);
+}
+
+const options = {
+  enableHighAccuracy: true,
+  timeout: 5000,
+  maximumAge: 0,
+};
+
+const calculateDistance = (
+  lat1: number,
+  lon1: number,
+  lat2: number,
+  lon2: number
+) => {
+  const R = 6371e3; // metres
+  const φ1 = (lat1 * Math.PI) / 180; // φ, λ in radians
+  const φ2 = (lat2 * Math.PI) / 180;
+  const Δφ = ((lat2 - lat1) * Math.PI) / 180;
+  const Δλ = ((lon2 - lon1) * Math.PI) / 180;
+
+  const a =
+    Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
+    Math.cos(φ1) * Math.cos(φ2) * Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+  const d = (R * c) / 1000; // in km
+  console.log('🚀 ~ file: distance', d);
+  return d;
+};
+
+const Churches = ({ churches }: any) => {
+  const [currentPosition, setCurrentPosition] = useState<any>();
+  const [filteredChurches, setFilteredChurches] = useState<any>([]);
+  const [filter, setFilter] = useState<string>('all');
+
+  const handleChange = (e: any) => {
+    setFilter(e.target.value);
+  };
+
+  useEffect(() => {
+    if (global.navigator.geolocation) {
+      global.navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          console.log(
+            '🚀 ~ file: Churches.tsx:55 ~ navigator.geolocation.getCurrentPosition ~ position',
+            position
+          );
+          setCurrentPosition({ lat: latitude, lng: longitude });
+        },
+        error,
+        options
+      );
+    }
+  }, []);
+
+  useEffect(() => {
+    if (filter === 'all') {
+      setFilteredChurches([]);
+    }
+    if (filter !== 'all') {
+      const filterNumber = parseInt(filter);
+      const filtered = churches.filter((church: any) => {
+        const [churchALatitude, churchALongitude] = church.Location.replaceAll(
+          ' ',
+          ''
+        ).split(',');
+
+        const distance = calculateDistance(
+          currentPosition.lat,
+          currentPosition.lng,
+          churchALatitude,
+          churchALongitude
+        );
+        return distance <= filterNumber;
+      });
+
+      setFilteredChurches(filtered);
+    }
+  }, [filter]);
+
+  const churchesToDisplay = filter !== 'all' ? filteredChurches : churches;
+
+  return (
+    <>
+      <main style={mainStyle}>
+        <div className='title-container'>
+          <h1 className='text' style={titleStyle}>
+            Church Localizer
+          </h1>
+          <div className='buttons' style={buttonsStyle}>
+            <button type='button' onClick={() => setFilter('all')}>
+              Todas las Iglesias
+            </button>
+            <select
+              style={selectStyle}
+              name='range'
+              id='range'
+              onChange={handleChange}
+              value={filter}
+            >
+              <option value='all' disabled>
+                Elige un rango
+              </option>
+              <option value='2'>2km</option>
+              <option value='5'>5km</option>
+              <option value='10'>10km</option>
+              <option value='20'>20km</option>
+            </select>
+          </div>
+        </div>
+
+        <Swiper
+          // install Swiper modules
+          modules={[Grid, Pagination]}
+          grid={{
+            rows: 2,
+            fill: 'row',
+          }}
+          spaceBetween={30}
+          pagination={{ clickable: true }}
+          breakpoints={{
+            // when window width is >= 80px
+            300: {
+              slidesPerView: 1,
+              spaceBetween: 30,
+            },
+            850: {
+              slidesPerView: 2,
+              spaceBetween: 30,
+            },
+          }}
+        >
+          {churchesToDisplay.map((church: any) => {
+            const src = church.Images
+              ? church.Images[0]
+              : '/images/placeholder.png';
+            return (
+              <SwiperSlide key={church.ChurchId} style={slideStyles}>
+                <Link
+                  href={`/churches/${church.ChurchId}`}
+                  key={church.ChurchId}
+                >
+                  <Image
+                    src={src}
+                    alt={church.Name}
+                    width={200}
+                    height={100}
+                    priority={true}
+                    style={imageStyle}
+                  />
+
+                  <div className='metadata' style={metadataStyle}>
+                    <h3>{church.Name}</h3>
+                    <p>{church.Schedule}</p>
+                  </div>
+                </Link>
+              </SwiperSlide>
+            );
+          })}
+
+          {churchesToDisplay.length === 0 ? (
+            <h2
+              style={{
+                color: 'white',
+                fontSize: '1.2rem',
+                opacity: '0.8',
+              }}
+            >
+              No Churches in this range
+            </h2>
+          ) : null}
+        </Swiper>
+      </main>
+    </>
+  );
+};
+
+export default Churches;
+
+export async function getStaticProps() {
+  const res = await fetch('http://localhost:3000/api/churches');
+  const churches = await res.json();
+
+  return {
+    props: {
+      churches,
+    },
+  };
+}
