@@ -10,17 +10,8 @@ import 'swiper/css/pagination';
 
 import { ChurchType } from '../../components/types';
 
-function return_url(context: any) {
-  if (process.env.NODE_ENV === 'production') {
-    return `https://${context.req.rawHeaders[1]}`;
-  }
-  return 'http://localhost:3000';
-}
-
 export const getStaticPaths = async (context: any) => {
-  let url = return_url(context);
-
-  const res = await fetch(`${url}/api/churches`);
+  const res = await fetch(`https://api-church-localizer.onrender.com/api/churches`);
   const churches: any = await res.json();
 
   const paths = churches?.map((church: any) => ({
@@ -35,8 +26,7 @@ export const getStaticPaths = async (context: any) => {
 
 export const getStaticProps = async (context: any) => {
   const id = context.params.id;
-  let url = return_url(context);
-  const res = await fetch(`${url}/api/churches/` + id);
+  const res = await fetch(`https://api-church-localizer.onrender.com/api/churches/` + id);
   const church = await res.json();
   
   return {

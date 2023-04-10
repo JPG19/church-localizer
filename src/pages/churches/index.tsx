@@ -9,13 +9,6 @@ import 'swiper/css';
 import 'swiper/css/grid';
 import 'swiper/css/pagination';
 
-function return_url(context: any) {
-  if (process.env.NODE_ENV === 'production') {
-    return `https://${context.req.rawHeaders[1]}`;
-  }
-  return 'http://localhost:3000';
-}
-
 const buttonsStyle = {
   display: 'flex',
   alignItems: 'center',
@@ -241,10 +234,8 @@ const Churches = ({ churches }: any) => {
 
 export default Churches;
 
-export async function getStaticProps(context: any) {
-  let url = return_url(context);
-
-  const res = await fetch(`${url}/api/churches`);
+export async function getStaticProps() {
+  const res = await fetch(`https://api-church-localizer.onrender.com/api/churches`);
   const churches = await res.json();
 
   return {
