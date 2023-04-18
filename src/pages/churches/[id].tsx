@@ -1,8 +1,11 @@
-import { useMemo } from 'react';
+import { useState, useMemo, useContext } from 'react';
 import Image from 'next/image';
 import { GoogleMap, useLoadScript, MarkerF } from '@react-google-maps/api';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination } from 'swiper';
+import { useMediaQuery } from 'react-responsive';
+
+import { MyContext } from '../../../src/pages/_app';
 
 // Import Swiper styles
 import 'swiper/css';
@@ -10,8 +13,10 @@ import 'swiper/css/pagination';
 
 import { ChurchType } from '../../components/types';
 
-export const getStaticPaths = async (context: any) => {
-  const res = await fetch(`https://api-church-localizer.onrender.com/api/churches`);
+export const getStaticPaths = async () => {
+  const res = await fetch(
+    `https://api-church-localizer.onrender.com/api/churches`
+  );
   const churches: any = await res.json();
 
   const paths = churches?.map((church: any) => ({
@@ -26,9 +31,11 @@ export const getStaticPaths = async (context: any) => {
 
 export const getStaticProps = async (context: any) => {
   const id = context.params.id;
-  const res = await fetch(`https://api-church-localizer.onrender.com/api/churches/` + id);
+  const res = await fetch(
+    `https://api-church-localizer.onrender.com/api/churches/` + id
+  );
   const church = await res.json();
-  
+
   return {
     props: {
       church,
@@ -38,6 +45,8 @@ export const getStaticProps = async (context: any) => {
 
 const mainStyle = {
   padding: '20px',
+  maxWidth: '1400px',
+  margin: '0 auto',
 };
 
 const metadataStyle = {
@@ -50,6 +59,11 @@ const titleStyle = {
 };
 
 const Church = ({ church }: { church: ChurchType }) => {
+  console.log('🚀 ~ file: [id].tsx:62 ~ Church ~ church:', church);
+
+  const [reviews, setReviews] = useState(church.Reviews || []);
+  console.log('🚀 ~ file: [id].tsx:66 ~ Church ~ reviews:', reviews);
+
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY as string,
   });
@@ -60,6 +74,13 @@ const Church = ({ church }: { church: ChurchType }) => {
     margin: '25px auto',
   };
 
+  const biggerThanLaptop = useMediaQuery({ query: '(min-width: 1024px)' });
+
+  const slidesPerView = useMemo(() => {
+    if (biggerThanLaptop) return 3;
+    return 1;
+  }, [biggerThanLaptop]);
+
   const position = useMemo(() => {
     const [latString, lngString] = church.Location.split(',');
     return {
@@ -68,6 +89,48 @@ const Church = ({ church }: { church: ChurchType }) => {
     };
   }, [church]);
 
+  const { user } = useContext(MyContext);
+
+  // function that updates dynamo table
+  function sendReview() {
+    // @ts-ignore
+    const comment = document.getElementById('review')?.value;
+    const existingReviews = church?.Reviews || [];
+
+    const reviews = [
+      ...existingReviews,
+      {
+        name: user.displayName,
+        comment,
+      },
+    ];
+
+    fetch(
+      `https://api-church-localizer.onrender.com/api/churches/${church.ChurchId}`,
+
+      {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          reviews,
+        }),
+      }
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        console.log('data');
+      });
+
+    setReviews(reviews);
+  }
+
+  const hasAlreadyCommented = useMemo(() => {
+    if (!user) return false;
+    return reviews?.some((review) => review.name === user.displayName);
+  }, [reviews, user]);
+
   if (!isLoaded) return <div>Loading...</div>;
 
   return (
@@ -75,7 +138,7 @@ const Church = ({ church }: { church: ChurchType }) => {
       <Swiper
         // install Swiper modules
         className='church-swiper'
-        slidesPerView={3}
+        slidesPerView={slidesPerView}
         modules={[Pagination]}
         spaceBetween={30}
         pagination={{ clickable: true }}
@@ -96,63 +159,77 @@ const Church = ({ church }: { church: ChurchType }) => {
       <div className='metadata' style={metadataStyle}>
         <h2 style={titleStyle}>{church.Name}</h2>
 
-        <label>Horario</label>
-        <p>{church.Schedule}</p>
+        <div className='grid-container'>
+          <div className='grid-item'>
+            <h3>Horario</h3>
+            <p>{church.Schedule}</p>
+          </div>
 
-        <label>Capacidad</label>
-        <p>{church.Capacity}</p>
+          <div className='grid-item'>
+            <h3>Capacidad</h3>
+            <p>{church.Capacity}</p>
+          </div>
 
-        <label>Protocolo de salud</label>
-        <p>{church.HealthProtocol}</p>
+          <div className='grid-item'>
+            <h3>Protocolo de salud</h3>
+            <p>{church.HealthProtocol}</p>
+          </div>
 
-        <div className='flex-container'>
-          <label>Bautismo</label>
-          <input
-            style={{ width: 'auto', transform: 'scale(1.5)' }}
-            type='checkbox'
-            disabled={true}
-            defaultChecked={church.Baptism}
-          />
+          <div className='grid-item'>
+            <h3>Bautismo</h3>
+            <input
+              style={{ width: 'auto', transform: 'scale(1.5)' }}
+              type='checkbox'
+              disabled={true}
+              defaultChecked={church.Baptism}
+            />
+          </div>
+
+          <div className='grid-item'>
+            <h3>Primera Comunión</h3>
+            <input
+              style={{ width: 'auto', transform: 'scale(1.5)' }}
+              type='checkbox'
+              disabled={true}
+              defaultChecked={church.FirstCommunion}
+            />
+          </div>
+
+          <div className='grid-item'>
+            <h3>Confirmación</h3>
+            <input
+              style={{ width: 'auto', transform: 'scale(1.5)' }}
+              type='checkbox'
+              disabled={true}
+              defaultChecked={church.Confirmation}
+            />
+          </div>
+
+          <div className='grid-item'>
+            <h3>Boda</h3>
+            <input
+              style={{ width: 'auto', transform: 'scale(1.5)' }}
+              type='checkbox'
+              disabled={true}
+              defaultChecked={church.Wedding}
+            />
+          </div>
+
+          <div className='grid-item'>
+            <h3>Sacerdotes</h3>
+            <p>{church.Priests}</p>
+          </div>
+
+          <div className='grid-item'>
+            <h3>Teléfono</h3>
+            <p>{church.Phone}</p>
+          </div>
+
+          <div className='grid-item'>
+            <h3>Correo Electronico</h3>
+            <p>{church.Email}</p>
+          </div>
         </div>
-
-        <div className='flex-container'>
-          <label>Primera Comunión</label>
-          <input
-            style={{ width: 'auto', transform: 'scale(1.5)' }}
-            type='checkbox'
-            disabled={true}
-            defaultChecked={church.FirstCommunion}
-          />
-        </div>
-
-        <div className='flex-container'>
-          <label>Confirmación</label>
-          <input
-            style={{ width: 'auto', transform: 'scale(1.5)' }}
-            type='checkbox'
-            disabled={true}
-            defaultChecked={church.Confirmation}
-          />
-        </div>
-
-        <div className='flex-container'>
-          <label>Boda</label>
-          <input
-            style={{ width: 'auto', transform: 'scale(1.5)' }}
-            type='checkbox'
-            disabled={true}
-            defaultChecked={church.Wedding}
-          />
-        </div>
-
-        <label>Sacerdote</label>
-        <p>{church.Priests}</p>
-
-        <label>Teléfono</label>
-        <p>{church.Phone}</p>
-
-        <label>Correo Electronico</label>
-        <p>{church.Email}</p>
       </div>
 
       {isLoaded ? (
@@ -166,6 +243,31 @@ const Church = ({ church }: { church: ChurchType }) => {
         </GoogleMap>
       ) : (
         <></>
+      )}
+
+      <div className='reviews'>
+        <h3>Reviews</h3>
+
+        {reviews.length === 0 ? (
+          <p>There are no reviews</p>
+        ) : (
+          reviews.map((review, index) => (
+            <div key={index} className='review'>
+              <h4>{review.name}</h4>
+              <p>{review.comment}</p>
+            </div>
+          ))
+        )}
+      </div>
+
+      {hasAlreadyCommented ? null : (
+        <div className='comment-section'>
+          <label>Leave a comment:</label>
+
+          <textarea id='review' />
+
+          <button onClick={() => sendReview()}>Send</button>
+        </div>
       )}
     </main>
   );

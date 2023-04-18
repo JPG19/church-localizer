@@ -13,4 +13,8 @@ export interface ChurchType {
     Priests: string[];
     Phone: number;
     Email: string;
+    Reviews: {
+        name: string;
+        comment: string;
+    }[]
 }

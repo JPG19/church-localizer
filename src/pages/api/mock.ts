@@ -20,7 +20,7 @@ export const datosIglesias = [
     Name: 'Parroquia Virgen De Fatima',
     Location: '-25.29856341570516, -57.58338424740223',
     Schedule: 'Lunes a sabados de 9:00 a 14:00',
-    Images: 'https://live.staticflickr.com/867/39251370590_9639779b29_b.jpg',
+    Images: ['https://live.staticflickr.com/867/39251370590_9639779b29_b.jpg'],
     Capacity: 50,
     HealthProtocol: 'Uso de mascarilla obligatorio',
     Baptism: true,
@@ -29,7 +29,7 @@ export const datosIglesias = [
     Wedding: true,
     Priests: 'P. Juan',
     Phone: '123456789',
-    Email: 'adasdas@fmaifl.com',
+    Email: 'virgendefatimarecoleta@gmail.com',
   },
   {
     ChurchId: 3,

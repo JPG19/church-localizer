@@ -63,27 +63,27 @@ const options = {
   maximumAge: 0,
 };
 
-const calculateDistance = (
-  lat1: number,
-  lon1: number,
-  lat2: number,
-  lon2: number
-) => {
-  const R = 6371e3; // metres
-  const φ1 = (lat1 * Math.PI) / 180; // φ, λ in radians
-  const φ2 = (lat2 * Math.PI) / 180;
-  const Δφ = ((lat2 - lat1) * Math.PI) / 180;
-  const Δλ = ((lon2 - lon1) * Math.PI) / 180;
+// const calculateDistance = (
+//   lat1: number,
+//   lon1: number,
+//   lat2: number,
+//   lon2: number
+// ) => {
+//   const R = 6371e3; // metres
+//   const φ1 = (lat1 * Math.PI) / 180; // φ, λ in radians
+//   const φ2 = (lat2 * Math.PI) / 180;
+//   const Δφ = ((lat2 - lat1) * Math.PI) / 180;
+//   const Δλ = ((lon2 - lon1) * Math.PI) / 180;
 
-  const a =
-    Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
-    Math.cos(φ1) * Math.cos(φ2) * Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
-  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+//   const a =
+//     Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
+//     Math.cos(φ1) * Math.cos(φ2) * Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
+//   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 
-  const d = (R * c) / 1000; // in km
-  console.log('🚀 ~ file: distance', d);
-  return d;
-};
+//   const d = (R * c) / 1000; // in km
+//   console.log('🚀 ~ file: distance', d);
+//   return d;
+// };
 
 export default function Home({ churches }: any) {
 
@@ -95,47 +95,47 @@ export default function Home({ churches }: any) {
     setFilter(e.target.value);
   };
 
-  useEffect(() => {
-    if (global.navigator.geolocation) {
-      global.navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const { latitude, longitude } = position.coords;
-          console.log(
-            '🚀 ~ file: Churches.tsx:55 ~ navigator.geolocation.getCurrentPosition ~ position',
-            position
-          );
-          setCurrentPosition({ lat: latitude, lng: longitude });
-        },
-        error,
-        options
-      );
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (global.navigator.geolocation) {
+  //     global.navigator.geolocation.getCurrentPosition(
+  //       (position) => {
+  //         const { latitude, longitude } = position.coords;
+  //         console.log(
+  //           '🚀 ~ file: Churches.tsx:55 ~ navigator.geolocation.getCurrentPosition ~ position',
+  //           position
+  //         );
+  //         setCurrentPosition({ lat: latitude, lng: longitude });
+  //       },
+  //       error,
+  //       options
+  //     );
+  //   }
+  // }, []);
 
-  useEffect(() => {
-    if (filter === 'all') {
-      setFilteredChurches([]);
-    }
-    if (filter !== 'all') {
-      const filterNumber = parseInt(filter);
-      const filtered = churches.filter((church: any) => {
-        const [churchALatitude, churchALongitude] = church.Location.replaceAll(
-          ' ',
-          ''
-        ).split(',');
+  // useEffect(() => {
+  //   if (filter === 'all') {
+  //     setFilteredChurches([]);
+  //   }
+  //   if (filter !== 'all') {
+  //     const filterNumber = parseInt(filter);
+  //     const filtered = churches.filter((church: any) => {
+  //       const [churchALatitude, churchALongitude] = church.Location.replaceAll(
+  //         ' ',
+  //         ''
+  //       ).split(',');
 
-        const distance = calculateDistance(
-          currentPosition.lat,
-          currentPosition.lng,
-          churchALatitude,
-          churchALongitude
-        );
-        return distance <= filterNumber;
-      });
+  //       const distance = calculateDistance(
+  //         currentPosition.lat,
+  //         currentPosition.lng,
+  //         churchALatitude,
+  //         churchALongitude
+  //       );
+  //       return distance <= filterNumber;
+  //     });
 
-      setFilteredChurches(filtered);
-    }
-  }, [filter]);
+  //     setFilteredChurches(filtered);
+  //   }
+  // }, [filter]);
 
   const churchesToDisplay = filter !== 'all' ? filteredChurches : churches;
 
@@ -154,7 +154,7 @@ export default function Home({ churches }: any) {
           <h1 className='text' style={titleStyle}>
             Church Localizer
           </h1>
-          <div className='buttons' style={buttonsStyle}>
+          {/* <div className='buttons' style={buttonsStyle}>
             <button type='button' onClick={() => setFilter('all')}>
               Todas las Iglesias
             </button>
@@ -173,7 +173,7 @@ export default function Home({ churches }: any) {
               <option value='10'>10km</option>
               <option value='20'>20km</option>
             </select>
-          </div>
+          </div> */}
         </div>
 
         <Swiper
