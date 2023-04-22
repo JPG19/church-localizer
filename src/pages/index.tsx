@@ -152,7 +152,7 @@ export default function Home({ churches }: any) {
       <main style={mainStyle}>
         <div className='title-container'>
           <h1 className='text' style={titleStyle}>
-            Church Localizer
+            Localizador de Iglesias
           </h1>
           {/* <div className='buttons' style={buttonsStyle}>
             <button type='button' onClick={() => setFilter('all')}>

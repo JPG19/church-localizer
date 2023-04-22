@@ -59,11 +59,7 @@ const titleStyle = {
 };
 
 const Church = ({ church }: { church: ChurchType }) => {
-  console.log('🚀 ~ file: [id].tsx:62 ~ Church ~ church:', church);
-
   const [reviews, setReviews] = useState(church.Reviews || []);
-  console.log('🚀 ~ file: [id].tsx:66 ~ Church ~ reviews:', reviews);
-
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY as string,
   });
@@ -118,12 +114,14 @@ const Church = ({ church }: { church: ChurchType }) => {
         }),
       }
     )
-      .then((res) => res.json())
+      .then((res) => {
+        console.log('aca?')
+        res.json();
+      })
       .then((data) => {
-        console.log('data');
+        console.log('data: ', data);
+        setReviews(reviews);
       });
-
-    setReviews(reviews);
   }
 
   const hasAlreadyCommented = useMemo(() => {
@@ -246,10 +244,10 @@ const Church = ({ church }: { church: ChurchType }) => {
       )}
 
       <div className='reviews'>
-        <h3>Reviews</h3>
+        <h3>Reseñas</h3>
 
         {reviews.length === 0 ? (
-          <p>There are no reviews</p>
+          <p>No hay reseñas</p>
         ) : (
           reviews.map((review, index) => (
             <div key={index} className='review'>
@@ -262,11 +260,11 @@ const Church = ({ church }: { church: ChurchType }) => {
 
       {hasAlreadyCommented ? null : (
         <div className='comment-section'>
-          <label>Leave a comment:</label>
+          <label>Dejar una reseña:</label>
 
           <textarea id='review' />
 
-          <button onClick={() => sendReview()}>Send</button>
+          <button onClick={() => sendReview()}>Enviar</button>
         </div>
       )}
     </main>

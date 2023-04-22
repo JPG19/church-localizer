@@ -50,14 +50,14 @@ const Header = () => {
   return (
     <header style={styles}>
       <nav style={navStyles}>
-        <Link href='/'>Home</Link>
+        <Link href='/'>Inicio</Link>
         {/* <Link href='/contact'>
         Contact
       </Link> */}
         {user.displayName ? (
-          <button onClick={logout}>Logout</button>
+          <button onClick={logout}>Cerrar Sesion</button>
         ) : (
-          <button onClick={login}>Login with Google</button>
+          <button onClick={login}>Iniciar Sesion con Gmail</button>
         )}
 
         {user.displayName ? (
