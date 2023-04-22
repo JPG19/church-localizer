@@ -115,11 +115,9 @@ const Church = ({ church }: { church: ChurchType }) => {
       }
     )
       .then((res) => {
-        console.log('aca?')
         res.json();
       })
-      .then((data) => {
-        console.log('data: ', data);
+      .then(() => {
         setReviews(reviews);
       });
   }
@@ -128,6 +126,8 @@ const Church = ({ church }: { church: ChurchType }) => {
     if (!user) return false;
     return reviews?.some((review) => review.name === user.displayName);
   }, [reviews, user]);
+
+  const isLoggedIn = Object.keys(user || {})?.length > 0;
 
   if (!isLoaded) return <div>Loading...</div>;
 
@@ -258,7 +258,7 @@ const Church = ({ church }: { church: ChurchType }) => {
         )}
       </div>
 
-      {hasAlreadyCommented ? null : (
+      {hasAlreadyCommented ? null : isLoggedIn ? (
         <div className='comment-section'>
           <label>Dejar una reseña:</label>
 
@@ -266,7 +266,7 @@ const Church = ({ church }: { church: ChurchType }) => {
 
           <button onClick={() => sendReview()}>Enviar</button>
         </div>
-      )}
+      ) : null}
     </main>
   );
 };
