@@ -1,9 +1,11 @@
 import Head from 'next/head';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Grid, Pagination } from 'swiper';
+
+import { MyContext } from '../../src/pages/_app';
 
 // Import Swiper styles
 import 'swiper/css';
@@ -53,89 +55,58 @@ const metadataStyle = {
   backgroundColor: '#222222',
 };
 
-function error(err: any) {
-  console.warn(`ERROR(${err.code}): ${err.message}`);
-}
+const calculateDistance = (
+  lat1: number,
+  lon1: number,
+  lat2: number,
+  lon2: number
+) => {
+  const R = 6371e3; // metres
+  const φ1 = (lat1 * Math.PI) / 180; // φ, λ in radians
+  const φ2 = (lat2 * Math.PI) / 180;
+  const Δφ = ((lat2 - lat1) * Math.PI) / 180;
+  const Δλ = ((lon2 - lon1) * Math.PI) / 180;
 
-const options = {
-  enableHighAccuracy: true,
-  timeout: 5000,
-  maximumAge: 0,
+  const a =
+    Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
+    Math.cos(φ1) * Math.cos(φ2) * Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+  const d = (R * c) / 1000; // in km
+  return d;
 };
 
-// const calculateDistance = (
-//   lat1: number,
-//   lon1: number,
-//   lat2: number,
-//   lon2: number
-// ) => {
-//   const R = 6371e3; // metres
-//   const φ1 = (lat1 * Math.PI) / 180; // φ, λ in radians
-//   const φ2 = (lat2 * Math.PI) / 180;
-//   const Δφ = ((lat2 - lat1) * Math.PI) / 180;
-//   const Δλ = ((lon2 - lon1) * Math.PI) / 180;
-
-//   const a =
-//     Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
-//     Math.cos(φ1) * Math.cos(φ2) * Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
-//   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-
-//   const d = (R * c) / 1000; // in km
-//   console.log('🚀 ~ file: distance', d);
-//   return d;
-// };
-
 export default function Home({ churches }: any) {
-
-  const [currentPosition, setCurrentPosition] = useState<any>();
-  const [filteredChurches, setFilteredChurches] = useState<any>([]);
-  const [filter, setFilter] = useState<string>('all');
+  const [filteredChurches, setFilteredChurches] = useState<any>(churches);
+  const [filter, setFilter] = useState<string>('');
+  const { currentPosition } = useContext(MyContext);
 
   const handleChange = (e: any) => {
     setFilter(e.target.value);
   };
 
-  // useEffect(() => {
-  //   if (global.navigator.geolocation) {
-  //     global.navigator.geolocation.getCurrentPosition(
-  //       (position) => {
-  //         const { latitude, longitude } = position.coords;
-  //         console.log(
-  //           '🚀 ~ file: Churches.tsx:55 ~ navigator.geolocation.getCurrentPosition ~ position',
-  //           position
-  //         );
-  //         setCurrentPosition({ lat: latitude, lng: longitude });
-  //       },
-  //       error,
-  //       options
-  //     );
-  //   }
-  // }, []);
+  
 
-  // useEffect(() => {
-  //   if (filter === 'all') {
-  //     setFilteredChurches([]);
-  //   }
-  //   if (filter !== 'all') {
-  //     const filterNumber = parseInt(filter);
-  //     const filtered = churches.filter((church: any) => {
-  //       const [churchALatitude, churchALongitude] = church.Location.replaceAll(
-  //         ' ',
-  //         ''
-  //       ).split(',');
+  useEffect(() => {
+    if (filter) {
+      const filterNumber = parseInt(filter);
+      const filtered = churches.filter((church: any) => {
+        const [churchALatitude, churchALongitude] = church.Location.replaceAll(
+          ' ',
+          ''
+        ).split(',');
 
-  //       const distance = calculateDistance(
-  //         currentPosition.lat,
-  //         currentPosition.lng,
-  //         churchALatitude,
-  //         churchALongitude
-  //       );
-  //       return distance <= filterNumber;
-  //     });
-
-  //     setFilteredChurches(filtered);
-  //   }
-  // }, [filter]);
+        const distance = calculateDistance(
+          currentPosition.lat,
+          currentPosition.lng,
+          churchALatitude,
+          churchALongitude
+        );
+        return distance <= filterNumber;
+      });
+      setFilteredChurches(filtered);
+    }
+  }, [churches, filter, currentPosition]);
 
   const churchesToDisplay = filter !== 'all' ? filteredChurches : churches;
 
@@ -147,15 +118,17 @@ export default function Home({ churches }: any) {
         <meta name='viewport' content='width=device-width, initial-scale=1' />
         <link rel='icon' href='/favicon.ico' />
       </Head>
-      
 
       <main style={mainStyle}>
         <div className='title-container'>
           <h1 className='text' style={titleStyle}>
             Localizador de Iglesias
           </h1>
-          {/* <div className='buttons' style={buttonsStyle}>
-            <button type='button' onClick={() => setFilter('all')}>
+          <div className='buttons' style={buttonsStyle}>
+            <button type='button' onClick={() => {
+              setFilter('');
+              setFilteredChurches(churches);
+            }}>
               Todas las Iglesias
             </button>
             <select
@@ -165,7 +138,7 @@ export default function Home({ churches }: any) {
               onChange={handleChange}
               value={filter}
             >
-              <option value='all' disabled>
+              <option value='' disabled>
                 Elige un rango
               </option>
               <option value='2'>2km</option>
@@ -173,7 +146,7 @@ export default function Home({ churches }: any) {
               <option value='10'>10km</option>
               <option value='20'>20km</option>
             </select>
-          </div> */}
+          </div>
         </div>
 
         <Swiper
@@ -233,7 +206,7 @@ export default function Home({ churches }: any) {
                 opacity: '0.8',
               }}
             >
-              No Churches in this range
+              No hay Iglesias en este rango
             </h2>
           ) : null}
         </Swiper>
@@ -243,7 +216,9 @@ export default function Home({ churches }: any) {
 }
 
 export async function getStaticProps() {
-  const res = await fetch(`https://api-church-localizer.onrender.com/api/churches`);
+  const res = await fetch(
+    `https://api-church-localizer.onrender.com/api/churches`
+  );
   const churches = await res.json();
 
   return {

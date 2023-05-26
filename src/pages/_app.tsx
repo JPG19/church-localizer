@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 import Header from '@/components/Header/Header';
 import Footer from '@/components/Footer/Footer';
 import '@/styles/globals.css';
@@ -10,12 +10,16 @@ import type { AppProps } from 'next/app';
 type MyContextType = {
   user: any;
   setUser (user: any): void;
+  currentPosition: any;
+  setCurrentPosition (position: any): void;
 };
 
 // // Create the context with an initial value
 export const MyContext = createContext<MyContextType>({
   user: {},
-  setUser: () => {}
+  setUser: () => {},
+  currentPosition: {},
+  setCurrentPosition: () => {}
 });
 
 // // Create a custom hook to access the context value
@@ -24,11 +28,14 @@ export const useMyContext = () => useContext(MyContext);
 // // Create a provider component that will wrap the part of the app that needs the context
 export const MyContextProvider = ({ children }: any) => {
   const [user, setUser] = useState({});
+  const [currentPosition, setCurrentPosition] = useState({});
 
   // Pass the context value to the provider's value prop
   const contextValue: MyContextType = {
     user,
-    setUser
+    setUser,
+    currentPosition,
+    setCurrentPosition
   };
 
   return (

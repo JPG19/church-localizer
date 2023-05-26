@@ -19,8 +19,18 @@ const navStyles = {
   gap: '12px',
 };
 
+function error(err: any) {
+  console.warn(`ERROR(${err.code}): ${err.message}`);
+}
+
+const options = {
+  enableHighAccuracy: true,
+  timeout: 5000,
+  maximumAge: 10,
+};
+
 const Header = () => {
-  const { user, setUser } = useContext(MyContext);
+  const { user, setUser, setCurrentPosition } = useContext(MyContext);
 
   const login = () => {
     signInWithPopup(auth, provider).then((data: any) => {
@@ -45,7 +55,24 @@ const Header = () => {
         setUser(storageUser);
       }
     }
-  }, []);
+  }, [setUser]);
+
+  useEffect(() => {
+    if (global.navigator.geolocation) {
+      global.navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          console.log(
+            'my position:',
+            position
+          );
+          setCurrentPosition({ lat: latitude, lng: longitude });
+        },
+        error,
+        options
+      );
+    }
+  }, [setCurrentPosition]);
 
   return (
     <header style={styles}>
