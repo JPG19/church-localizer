@@ -5,12 +5,11 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination } from 'swiper';
 import { useMediaQuery } from 'react-responsive';
 
-import { MyContext } from '../../../src/pages/_app';
-
 // Import Swiper styles
 import 'swiper/css';
 import 'swiper/css/pagination';
 
+import { MyContext } from '../../../src/pages/_app';
 import { ChurchType } from '../../components/types';
 
 export const getStaticPaths = async () => {
@@ -41,21 +40,6 @@ export const getStaticProps = async (context: any) => {
       church,
     },
   };
-};
-
-const mainStyle = {
-  padding: '20px',
-  maxWidth: '1400px',
-  margin: '0 auto',
-};
-
-const metadataStyle = {
-  paddingTop: '20px',
-};
-
-const titleStyle = {
-  fontSize: '2rem',
-  color: 'white',
 };
 
 const Church = ({ church }: { church: ChurchType }) => {
@@ -132,7 +116,7 @@ const Church = ({ church }: { church: ChurchType }) => {
   if (!isLoaded) return <div>Loading...</div>;
 
   return (
-    <main style={mainStyle}>
+    <main className='p-5 max-w-7xl mx-auto'>
       <Swiper
         // install Swiper modules
         className='church-swiper'
@@ -154,8 +138,8 @@ const Church = ({ church }: { church: ChurchType }) => {
         ))}
       </Swiper>
 
-      <div className='metadata' style={metadataStyle}>
-        <h2 style={titleStyle}>{church.Name}</h2>
+      <div className='pt-5'>
+        <h2 className='text-2xl text-white'>{church.Name}</h2>
 
         <div className='grid-container'>
           <div className='grid-item'>

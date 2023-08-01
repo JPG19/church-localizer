@@ -10,10 +10,10 @@ const Contact= () => {
 
     emailjs
       .sendForm(
-        "service_v4s4s0c",
-        "template_bo8puyf",
+        process.env.NEXT_PUBLIC_EMAIL_JS_SERVICE_ID || '',
+        process.env.NEXT_PUBLIC_EMAIL_JS_TEMPLATE || '',
         e.target,
-        "user_Was8UVU8a8NC590sUl9s5"
+        process.env.NEXT_PUBLIC_EMAIL_JS_PUBLIC_KEY
       )
       .then(
         (result: any) => {
@@ -35,21 +35,8 @@ const Contact= () => {
     visible: { opacity: 1, y: 0 },
   };
 
-  const containerStyle = {
-    minHeight: '100vh',
-    display: 'grid',
-    justifyContent: 'center',
-    alignItems: 'center'
-  }
-
-  const formStyle = {
-    display: 'grid',
-    width: '650px',
-    padding: "20px"
-  }
-
   return (
-    <div className='contact-form-container' style={containerStyle}>
+    <div className='min-h-screen grid justify-center items-center'>
         <motion.form
           initial="hidden"
           animate="visible"
@@ -58,7 +45,8 @@ const Contact= () => {
             duration: 1,
           }}
           onSubmit={sendEmail}
-          style={formStyle}
+          className='grid gap-4 max-w-lg p-5'
+          style={{ width: '450px' }}
         >
           <h2 style={{ color: 'white' }}>Contact Juan Pablo</h2>
           <label>Name: </label>
@@ -68,7 +56,7 @@ const Contact= () => {
           <input type="email" name="email" required />
 
           <label>Message: </label>
-          <textarea name="message" required />
+          <textarea className='px-5 py-5' name="message" required />
           <input type="submit" value="Send" disabled={result ? true : false} />
           {result && "Email was sent"}
         </motion.form>

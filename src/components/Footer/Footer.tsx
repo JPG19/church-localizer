@@ -1,14 +1,6 @@
-const style = {
-  marginTop: 'auto',
-  padding: '16px',
-  display: 'flex',
-  alignItems: 'center', 
-  backgroundColor: 'gray'
-}
-
 const Footer = () => {
   return (
-    <footer style={style} />
+    <footer className="mt-auto p-4 flex items-center bg-gray-500" />
   )
 }
 

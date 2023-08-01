@@ -6,19 +6,6 @@ import Image from 'next/image';
 import { auth, provider } from '../../firebaseConfig';
 import { MyContext } from '../../../src/pages/_app';
 
-const styles = {
-  padding: '16px',
-  color: 'white',
-  lineHeight: 1.5,
-  backgroundColor: 'gray',
-};
-
-const navStyles = {
-  display: 'flex',
-  alignItems: 'center',
-  gap: '12px',
-};
-
 function error(err: any) {
   console.warn(`ERROR(${err.code}): ${err.message}`);
 }
@@ -62,10 +49,7 @@ const Header = () => {
       global.navigator.geolocation.getCurrentPosition(
         (position) => {
           const { latitude, longitude } = position.coords;
-          console.log(
-            'my position:',
-            position
-          );
+          console.log('my position:', position);
           setCurrentPosition({ lat: latitude, lng: longitude });
         },
         error,
@@ -75,12 +59,10 @@ const Header = () => {
   }, [setCurrentPosition]);
 
   return (
-    <header style={styles}>
-      <nav style={navStyles}>
+    <header className='p-4 text-white leading-6 bg-gray-500'>
+      <nav className='flex items-center gap-6'>
         <Link href='/'>Inicio</Link>
-        {/* <Link href='/contact'>
-        Contact
-      </Link> */}
+        <Link href='/contact'>Contact</Link>
         {user.displayName ? (
           <button onClick={logout}>Cerrar Sesion</button>
         ) : (

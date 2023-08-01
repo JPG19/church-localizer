@@ -315,6 +315,16 @@ select option {
   }
 }
 
+/* Basic styling for the select element */
+/* Styling the dropdown arrow */
+.custom-select::after {
+  content: "\25BC"; /* Unicode for down arrow ▼ */
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+}
+
 /* Forms */
 
 label {

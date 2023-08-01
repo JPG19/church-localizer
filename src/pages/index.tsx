@@ -12,49 +12,6 @@ import 'swiper/css';
 import 'swiper/css/grid';
 import 'swiper/css/pagination';
 
-const buttonsStyle = {
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'space-between',
-};
-
-const titleStyle = {
-  fontSize: '2rem',
-  marginBottom: '2rem',
-  color: '#fff',
-};
-
-const selectStyle = {
-  background: 'transparent',
-  border: '1px solid white',
-  color: '#fff',
-  padding: '8px',
-};
-
-const mainStyle = {
-  maxWidth: '1400px',
-  margin: '0 auto 0 auto',
-  padding: '20px',
-};
-
-const slideStyles = {
-  borderRadius: '30px 30px 0 0',
-  height: '400px',
-};
-
-const imageStyle = {
-  width: '100%',
-  height: '250px',
-};
-
-const metadataStyle = {
-  padding: '10px',
-  color: 'white',
-  borderRadius: '0 0 10px 10px',
-  height: '80px',
-  backgroundColor: '#222222',
-};
-
 const calculateDistance = (
   lat1: number,
   lon1: number,
@@ -84,8 +41,6 @@ export default function Home({ churches }: any) {
   const handleChange = (e: any) => {
     setFilter(e.target.value);
   };
-
-  
 
   useEffect(() => {
     if (filter) {
@@ -119,33 +74,38 @@ export default function Home({ churches }: any) {
         <link rel='icon' href='/favicon.ico' />
       </Head>
 
-      <main style={mainStyle}>
+      <main className='max-w-7xl mx-auto p-5'>
         <div className='title-container'>
-          <h1 className='text' style={titleStyle}>
-            Localizador de Iglesias
-          </h1>
-          <div className='buttons' style={buttonsStyle}>
-            <button type='button' onClick={() => {
-              setFilter('');
-              setFilteredChurches(churches);
-            }}>
+          <h1 className='text-2xl mb-8 text-white'>Localizador de Iglesias</h1>
+          <div className='flex items-center justify-between'>
+            <button
+              type='button'
+              className='bg-transparent text-white p-4 text-base border border-gray-300 rounded-md w-40'
+              onClick={() => {
+                setFilter('');
+                setFilteredChurches(churches);
+              }}
+            >
               Todas las Iglesias
             </button>
-            <select
-              style={selectStyle}
-              name='range'
-              id='range'
-              onChange={handleChange}
-              value={filter}
-            >
-              <option value='' disabled>
-                Elige un rango
-              </option>
-              <option value='2'>2km</option>
-              <option value='5'>5km</option>
-              <option value='10'>10km</option>
-              <option value='20'>20km</option>
-            </select>
+
+            <div className='custom-select'>
+              <select
+                name='range'
+                id='range'
+                className='bg-transparent text-white p-4 text-base border border-gray-300 rounded-md w-40'
+                onChange={handleChange}
+                value={filter}
+              >
+                <option value='' disabled>
+                  Elige un rango
+                </option>
+                <option value='2'>2km</option>
+                <option value='5'>5km</option>
+                <option value='10'>10km</option>
+                <option value='20'>20km</option>
+              </select>
+            </div>
           </div>
         </div>
 
@@ -175,7 +135,10 @@ export default function Home({ churches }: any) {
               ? church.Images[0]
               : '/images/placeholder.png';
             return (
-              <SwiperSlide key={church.ChurchId} style={slideStyles}>
+              <SwiperSlide
+                className='rounded-tl-3xl rounded-tr-3xl h-96'
+                key={church.ChurchId}
+              >
                 <Link
                   href={`/churches/${church.ChurchId}`}
                   key={church.ChurchId}
@@ -186,10 +149,10 @@ export default function Home({ churches }: any) {
                     width={200}
                     height={100}
                     priority={true}
-                    style={imageStyle}
+                    className='w-full h-60'
                   />
 
-                  <div className='metadata' style={metadataStyle}>
+                  <div className='p-2 text-white rounded-b-lg h-20'>
                     <h3>{church.Name}</h3>
                     <p>{church.Schedule}</p>
                   </div>
