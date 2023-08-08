@@ -1,5 +1,6 @@
 import React, { useContext, useEffect } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { signInWithPopup } from 'firebase/auth';
 import Image from 'next/image';
 
@@ -17,12 +18,16 @@ const options = {
 };
 
 const Header = () => {
+  const router = useRouter();
+  const { pathname } = router;
   const { user, setUser, setCurrentPosition } = useContext(MyContext);
 
   const login = () => {
     signInWithPopup(auth, provider).then((data: any) => {
       setUser(data.user);
       localStorage.setItem('user', JSON.stringify(data.user));
+    }).catch((e) => {
+      console.log('error:', e)
     });
   };
 
@@ -60,13 +65,14 @@ const Header = () => {
 
   return (
     <header className='p-4 text-white leading-6 bg-gray-500'>
-      <nav className='flex items-center gap-6'>
-        <Link href='/'>Inicio</Link>
-        <Link href='/contact'>Contact</Link>
+      <nav className='flex items-center gap-4'>
+        <Link className={`${pathname === '/' ? 'active' : ''}`} href='/'>Inicio</Link>
+        {/* <Link href='/contact'>Contact</Link> */}
+        <Link className={`${pathname === '/add' ? 'active' : ''}`} href='/add'>Agregar Iglesia</Link>
         {user.displayName ? (
-          <button onClick={logout}>Cerrar Sesion</button>
+          <button style={{ marginLeft: 'auto' }} onClick={logout}>Cerrar Sesion</button>
         ) : (
-          <button onClick={login}>Iniciar Sesion con Gmail</button>
+          <button style={{ marginLeft: 'auto' }} onClick={login}>Iniciar Sesion con Gmail</button>
         )}
 
         {user.displayName ? (
@@ -75,7 +81,7 @@ const Header = () => {
             width={45}
             height={45}
             alt='User thumbnail'
-            style={{ borderRadius: '50%', marginLeft: 'auto' }}
+            style={{ borderRadius: '50%' }}
           />
         ) : null}
       </nav>

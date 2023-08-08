@@ -157,44 +157,52 @@ const Church = ({ church }: { church: ChurchType }) => {
             <p>{church.HealthProtocol}</p>
           </div>
 
-          <div className='grid-item'>
+          <div className='grid-item row'>
             <h3>Bautismo</h3>
-            <input
-              style={{ width: 'auto', transform: 'scale(1.5)' }}
-              type='checkbox'
-              disabled={true}
-              defaultChecked={church.Baptism}
-            />
+            <div>
+              <input
+                style={{ width: 'auto', transform: 'scale(1.5)' }}
+                type='checkbox'
+                disabled={true}
+                defaultChecked={church.Baptism}
+              />
+            </div>
           </div>
 
-          <div className='grid-item'>
+          <div className='grid-item row'>
             <h3>Primera Comunión</h3>
-            <input
-              style={{ width: 'auto', transform: 'scale(1.5)' }}
-              type='checkbox'
-              disabled={true}
-              defaultChecked={church.FirstCommunion}
-            />
+            <div>
+              <input
+                style={{ width: 'auto', transform: 'scale(1.5)' }}
+                type='checkbox'
+                disabled={true}
+                defaultChecked={church.FirstCommunion}
+              />
+            </div>
           </div>
 
-          <div className='grid-item'>
+          <div className='grid-item row'>
             <h3>Confirmación</h3>
-            <input
-              style={{ width: 'auto', transform: 'scale(1.5)' }}
-              type='checkbox'
-              disabled={true}
-              defaultChecked={church.Confirmation}
-            />
+            <div>
+              <input
+                style={{ width: 'auto', transform: 'scale(1.5)' }}
+                type='checkbox'
+                disabled={true}
+                defaultChecked={church.Confirmation}
+              />
+            </div>
           </div>
 
-          <div className='grid-item'>
+          <div className='grid-item row'>
             <h3>Boda</h3>
-            <input
-              style={{ width: 'auto', transform: 'scale(1.5)' }}
-              type='checkbox'
-              disabled={true}
-              defaultChecked={church.Wedding}
-            />
+            <div>
+              <input
+                style={{ width: 'auto', transform: 'scale(1.5)' }}
+                type='checkbox'
+                disabled={true}
+                defaultChecked={church.Wedding}
+              />
+            </div>
           </div>
 
           <div className='grid-item'>

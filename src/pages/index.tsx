@@ -80,7 +80,7 @@ export default function Home({ churches }: any) {
           <div className='flex items-center justify-between'>
             <button
               type='button'
-              className='bg-transparent text-white p-4 text-base border border-gray-300 rounded-md w-40'
+              className='bg-transparent text-white p-2 text-base border border-gray-300 rounded-md w-40'
               onClick={() => {
                 setFilter('');
                 setFilteredChurches(churches);
@@ -93,7 +93,7 @@ export default function Home({ churches }: any) {
               <select
                 name='range'
                 id='range'
-                className='bg-transparent text-white p-4 text-base border border-gray-300 rounded-md w-40'
+                className='bg-transparent text-white p-2 text-base border border-gray-300 rounded-md w-40'
                 onChange={handleChange}
                 value={filter}
               >
@@ -147,9 +147,9 @@ export default function Home({ churches }: any) {
                     src={src}
                     alt={church.Name}
                     width={200}
-                    height={100}
+                    height={300}
                     priority={true}
-                    className='w-full h-60'
+                    style={{ height: '300px', width: '100%' }}
                   />
 
                   <div className='p-2 text-white rounded-b-lg h-20'>
