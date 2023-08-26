@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import Image from 'next/image';
 import emailjs from "@emailjs/browser";
 import { motion } from "framer-motion";
 
@@ -36,7 +37,8 @@ const Contact= () => {
   };
 
   return (
-    <div className='min-h-screen grid justify-center items-center'>
+    <>
+      <div className='min-h-screen grid justify-center items-center'>
         <motion.form
           initial="hidden"
           animate="visible"
@@ -61,6 +63,8 @@ const Contact= () => {
           {result && "Email was sent"}
         </motion.form>
     </div>
+    </>
+    
   );
 };
 

@@ -64,7 +64,7 @@ const Header = () => {
   }, [setCurrentPosition]);
 
   return (
-    <header className='p-4 text-white leading-6 bg-gray-500'>
+    <header className='p-4 text-white'>
       <nav className='flex items-center gap-4'>
         <Link className={`${pathname === '/' ? 'active' : ''}`} href='/'>Inicio</Link>
         {/* <Link href='/contact'>Contact</Link> */}
