@@ -125,7 +125,8 @@ h1 {
   color: #fff;
 }
 
-header, footer {
+header,
+footer {
   background-color: #571010;
 }
 
@@ -334,7 +335,6 @@ select option {
   }
 }
 
-
 .custom-select select {
   width: 200px;
   padding: 8px;
@@ -351,7 +351,6 @@ select option {
   cursor: pointer;
   transition: border-color 0.3s, box-shadow 0.3s;
 }
-
 
 /* Basic styling for the select element */
 /* Styling the dropdown arrow */
@@ -559,7 +558,8 @@ header button.active {
   font-weight: 700;
 }
 
-header a:hover, header button:hover {
+header a:hover,
+header button:hover {
   opacity: 1;
 }
 
@@ -583,6 +583,54 @@ main .grid-container .grid-item.row {
 
 main .grid-container .grid-item h3 {
   font-weight: 700;
+}
+
+main .title-container .search-input {
+  position: relative;
+  display: flex;
+  gap: 10px;
+}
+
+main .title-container .search-input select {
+  color: #fff;
+  border-radius: 0;
+}
+
+main .title-container .search-input .toggle-button {
+  display: inline-block;
+  width: 60px;
+  height: 30px;
+  background-color: #ccc;
+  border-radius: 15px;
+  cursor: pointer;
+}
+
+main .title-container .search-input .toggle-button.active {
+  background-color: green;
+}
+
+main .title-container .search-input .toggle-switch {
+  width: 30px;
+  height: 30px;
+  background-color: #fff;
+  border-radius: 50%;
+  transition: transform 0.2s;
+}
+
+main .title-container .search-input .toggle-switch.active {
+  transform: translateX(30px);
+}
+
+main .title-container input {
+  border: 1px solid #fff;
+  border-radius: 0;
+}
+
+main .title-container .search-input button {
+  position: absolute;
+  right: 0;
+  border: none;
+  background: none;
 }
 
 main .title-container button,

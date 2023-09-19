@@ -44,7 +44,6 @@ export const getStaticProps = async (context: any) => {
 
 const Church = ({ church }: { church: ChurchType }) => {
   const [reviews, setReviews] = useState(church.Reviews || []);
-  console.log("🚀 ~ file: [id].tsx:47 ~ Church ~ reviews:", reviews)
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY as string,
   });
@@ -76,12 +75,9 @@ const Church = ({ church }: { church: ChurchType }) => {
   function sendReview() {
     // @ts-ignore
     const comment = document.getElementById('review')?.value;
-    console.log("🚀 ~ file: [id].tsx:80 ~ sendReview ~ comment:", comment)
     const existingReviews = church?.Reviews || [];
     const url = `https://api-church-localizer.onrender.com/api/churches/${church.ChurchId}`;
 
-    console.log("🚀 ~ file: [id].tsx:81 ~ sendReview ~ url:", url)
-    console.log('user.displayName: ', user.displayName);
     const reviews = [
       ...existingReviews,
       {

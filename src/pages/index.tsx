@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import { useEffect, useState, useContext } from 'react';
+import { useEffect, useState, useContext, useRef } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -35,33 +35,67 @@ const calculateDistance = (
 
 export default function Home({ churches }: any) {
   const [filteredChurches, setFilteredChurches] = useState<any>(churches);
+  const [activeInput, setActiveInput] = useState(false);
+  const searchInputRef = useRef(null);
   const [filter, setFilter] = useState<string>('');
+  const [switchValue, setSwitchValue] = useState<boolean>(false);
   const { currentPosition } = useContext(MyContext);
 
-  const handleChange = (e: any) => {
-    setFilter(e.target.value);
+  const handleTopLevelFilter = (e: any) => {
+    const value = e.target.value;
+
+    setFilter(value);
+    setSwitchValue(false);
+  };
+
+  const handleDistanceFilter = (e: any) => {
+    const value = parseInt(e.target.value);
+    const filtered = churches.filter((church: any) => {
+      const [churchALatitude, churchALongitude] = church.Location.replaceAll(
+        ' ',
+        ''
+      ).split(',');
+
+      const distance = calculateDistance(
+        currentPosition.lat,
+        currentPosition.lng,
+        churchALatitude,
+        churchALongitude
+      );
+      return distance <= value;
+    });
+    setFilteredChurches(filtered);
+  };
+
+  const handleInputChange = (value: string) => {
+    if (!value) {
+      setFilteredChurches(churches);
+      setActiveInput(false);
+      return;
+    }
+
+    const filterChurches = churches.filter((church: any) => {
+      const churchName = church.Name.toLowerCase();
+      return churchName.includes(value);
+    });
+
+    setActiveInput(true);
+    setFilteredChurches(filterChurches);
   };
 
   useEffect(() => {
-    if (filter) {
-      const filterNumber = parseInt(filter);
-      const filtered = churches.filter((church: any) => {
-        const [churchALatitude, churchALongitude] = church.Location.replaceAll(
-          ' ',
-          ''
-        ).split(',');
-
-        const distance = calculateDistance(
-          currentPosition.lat,
-          currentPosition.lng,
-          churchALatitude,
-          churchALongitude
-        );
-        return distance <= filterNumber;
+    let newChurches = [];
+    console.log("🚀 ~ file: index.tsx:89 ~ useEffect ~ filter:", filter)
+    if (filter && filter !== 'distance') {
+      // check the filter
+      newChurches = churches.filter((church: any) => {
+        const value = church[filter] === switchValue ? true : false;
+        return value;
       });
-      setFilteredChurches(filtered);
+      console.log("🚀 ~ file: index.tsx:95 ~ newChurches=churches.filter ~ newChurches:", newChurches)
+      setFilteredChurches(newChurches);
     }
-  }, [churches, filter, currentPosition]);
+  }, [switchValue, filter, churches]);
 
   const churchesToDisplay = filter !== 'all' ? filteredChurches : churches;
 
@@ -77,25 +111,28 @@ export default function Home({ churches }: any) {
       <main className='max-w-7xl mx-auto p-5'>
         <div className='title-container'>
           <h1 className='text-2xl mb-8'>Localizador de Iglesias</h1>
-          <div className='flex items-center justify-between'>
-            <button
-              type='button'
-              className='bg-transparent p-2 text-base border border-gray-300 rounded-md w-40'
-              onClick={() => {
-                setFilter('');
-                setFilteredChurches(churches);
-              }}
-            >
-              Todas las Iglesias
-            </button>
 
-            <div className='custom-select'>
+          <div className='search-input'>
+            <select
+              name='range'
+              id='range'
+              className='bg-transparent text-black p-2 text-base border border-gray-300 rounded-md w-40'
+              onChange={handleTopLevelFilter}
+              value={filter}
+            >
+              <option value=''>Nombre</option>
+              <option value='Baptism'>Bautismo</option>
+              <option value='Wedding'>Casamiento</option>
+              <option value='FirstCommunion'>Primera Comunion</option>
+              <option value='distance'>Distancia</option>
+            </select>
+
+            {filter === 'distance' ? (
               <select
                 name='range'
                 id='range'
                 className='bg-transparent text-black p-2 text-base border border-gray-300 rounded-md w-40'
-                onChange={handleChange}
-                value={filter}
+                onChange={(e) => handleDistanceFilter(e)}
               >
                 <option value='' disabled>
                   Elige un rango
@@ -105,7 +142,40 @@ export default function Home({ churches }: any) {
                 <option value='10'>10km</option>
                 <option value='20'>20km</option>
               </select>
-            </div>
+            ) : null}
+
+            {filter && filter !== 'distance' ? (
+              <label
+                className={`toggle-button ${switchValue ? 'active' : ''}`}
+                id='toggleButton'
+              >
+                <div
+                  onClick={() => setSwitchValue(!switchValue)}
+                  className={`toggle-switch ${switchValue ? 'active' : ''}`}
+                ></div>
+              </label>
+            ) : null}
+
+            {!filter ? (
+              <input
+                placeholder='Busca una iglesia'
+                onChange={(e) => handleInputChange(e.target.value)}
+                ref={searchInputRef}
+              />
+            ) : null}
+
+            {activeInput ? (
+              <button
+                onClick={() => {
+                  setFilteredChurches(churches);
+                  setActiveInput(false);
+                  // @ts-ignore
+                  searchInputRef.current.value = '';
+                }}
+              >
+                X
+              </button>
+            ) : null}
           </div>
         </div>
 
@@ -168,7 +238,7 @@ export default function Home({ churches }: any) {
                 fontSize: '1.2rem',
               }}
             >
-              No hay Iglesias en este rango
+              No hay Iglesias para mostrar
             </h2>
           ) : null}
         </Swiper>
