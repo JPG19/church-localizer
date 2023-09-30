@@ -11,7 +11,7 @@ const Contact = () => {
     emailjs
       .sendForm(
         process.env.NEXT_PUBLIC_EMAIL_JS_SERVICE_ID || '',
-        process.env.NEXT_PUBLIC_EMAIL_JS_TEMPLATE || '',
+        process.env.NEXT_PUBLIC_EMAIL_JS_ADD_TEMPLATE || '',
         e.target,
         process.env.NEXT_PUBLIC_EMAIL_JS_PUBLIC_KEY
       )

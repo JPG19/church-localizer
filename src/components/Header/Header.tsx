@@ -2,10 +2,12 @@ import React, { useContext, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { signInWithPopup } from 'firebase/auth';
+import emailjs from '@emailjs/browser';
 import Image from 'next/image';
 
 import { auth, provider } from '../../firebaseConfig';
 import { MyContext } from '../../../src/pages/_app';
+import { User } from 'aws-sdk/clients/budgets';
 
 function error(err: any) {
   console.warn(`ERROR(${err.code}): ${err.message}`);
@@ -23,12 +25,42 @@ const Header = () => {
   const { user, setUser, setCurrentPosition } = useContext(MyContext);
 
   const login = () => {
-    signInWithPopup(auth, provider).then((data: any) => {
-      setUser(data.user);
-      localStorage.setItem('user', JSON.stringify(data.user));
-    }).catch((e) => {
-      console.log('error:', e)
-    });
+    signInWithPopup(auth, provider)
+      .then((data: any) => {
+        console.log('🚀 ~ file: Header.tsx:27 ~ signInWithPopup ~ data:', data);
+        const { user } = data;
+
+        // If it's the first login then send a welcome email
+        if (user.metadata.creationTime === user.metadata.lastSignInTime) {
+          const params = {
+            name: user.displayName,
+            email: user.email,
+          };
+          console.log("🚀 ~ file: Header.tsx:39 ~ .then ~ params:", params)
+
+          emailjs
+            .send(
+              process.env.NEXT_PUBLIC_EMAIL_JS_SERVICE_ID || '',
+              process.env.NEXT_PUBLIC_EMAIL_JS_WELCOME_TEMPLATE || '',
+              params,
+              process.env.NEXT_PUBLIC_EMAIL_JS_PUBLIC_KEY
+            )
+            .then(
+              (result: any) => {
+                console.log(result.text);
+              },
+              (error: any) => {
+                console.log(error.text);
+              }
+            );
+        }
+
+        setUser(data.user);
+        localStorage.setItem('user', JSON.stringify(data.user));
+      })
+      .catch((e) => {
+        console.log('error:', e);
+      });
   };
 
   const logout = () => {
@@ -66,13 +98,21 @@ const Header = () => {
   return (
     <header className='p-4 text-white'>
       <nav className='flex items-center gap-4'>
-        <Link className={`${pathname === '/' ? 'active' : ''}`} href='/'>Inicio</Link>
+        <Link className={`${pathname === '/' ? 'active' : ''}`} href='/'>
+          Inicio
+        </Link>
         {/* <Link href='/contact'>Contact</Link> */}
-        <Link className={`${pathname === '/add' ? 'active' : ''}`} href='/add'>Agregar Iglesia</Link>
+        <Link className={`${pathname === '/add' ? 'active' : ''}`} href='/add'>
+          Agregar Iglesia
+        </Link>
         {user.displayName ? (
-          <button style={{ marginLeft: 'auto' }} onClick={logout}>Cerrar Sesion</button>
+          <button style={{ marginLeft: 'auto' }} onClick={logout}>
+            Cerrar Sesion
+          </button>
         ) : (
-          <button style={{ marginLeft: 'auto' }} onClick={login}>Iniciar Sesion con Gmail</button>
+          <button style={{ marginLeft: 'auto' }} onClick={login}>
+            Iniciar Sesion con Gmail
+          </button>
         )}
 
         {user.displayName ? (
