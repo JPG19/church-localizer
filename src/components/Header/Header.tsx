@@ -7,7 +7,6 @@ import Image from 'next/image';
 
 import { auth, provider } from '../../firebaseConfig';
 import { MyContext } from '../../../src/pages/_app';
-import { User } from 'aws-sdk/clients/budgets';
 
 function error(err: any) {
   console.warn(`ERROR(${err.code}): ${err.message}`);
@@ -32,22 +31,22 @@ const Header = () => {
 
         // If it's the first login then send a welcome email
         if (user.metadata.creationTime === user.metadata.lastSignInTime) {
-          const params = {
+
+          const templateParams = {
+            to: user.email,
             name: user.displayName,
-            email: user.email,
           };
-          console.log("🚀 ~ file: Header.tsx:39 ~ .then ~ params:", params)
 
           emailjs
             .send(
               process.env.NEXT_PUBLIC_EMAIL_JS_SERVICE_ID || '',
               process.env.NEXT_PUBLIC_EMAIL_JS_WELCOME_TEMPLATE || '',
-              params,
+              templateParams,
               process.env.NEXT_PUBLIC_EMAIL_JS_PUBLIC_KEY
             )
             .then(
               (result: any) => {
-                console.log(result.text);
+                console.log('email sent: ', result.text);
               },
               (error: any) => {
                 console.log(error.text);
