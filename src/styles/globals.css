@@ -643,6 +643,20 @@ main .title-container select:hover {
   opacity: 0.8;
 }
 
+main .contact {
+  color: #fff;
+}
+
+main .contact h3 {
+  text-align: center;
+  padding-bottom: 15px;
+}
+
+main .contact svg {
+  font-size: 3rem;
+}
+
+
 form input:hover {
   opacity: 0.9;
 }

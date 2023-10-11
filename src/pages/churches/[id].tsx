@@ -4,6 +4,9 @@ import { GoogleMap, useLoadScript, MarkerF } from '@react-google-maps/api';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination } from 'swiper';
 import { useMediaQuery } from 'react-responsive';
+import { Icon } from '@mui/material';
+import LocalPhoneIcon from '@mui/icons-material/LocalPhone';
+import EmailIcon from '@mui/icons-material/Email';
 
 // Import Swiper styles
 import 'swiper/css';
@@ -137,7 +140,7 @@ const Church = ({ church }: { church: ChurchType }) => {
         </Swiper>
 
         <div className='pt-5'>
-          <h2 className='text-2xl text-white'>{church.Name}</h2>
+          <h2 className='text-2xl text-white font-bold'>{church.Name}</h2>
 
           <div className='grid-container'>
             <div className='grid-item'>
@@ -207,18 +210,37 @@ const Church = ({ church }: { church: ChurchType }) => {
               <h3>Sacerdotes</h3>
               <p>{church.Priests}</p>
             </div>
+          </div>
+        </div>
 
-            <div className='grid-item'>
+        <div className='pt-5 contact'>
+          <h3>Haz una reserva</h3>
+
+          <div className='flex-container'>
+            <a href={`tel:${church.Phone}`}>
+              Telefono <LocalPhoneIcon />
+            </a>
+
+            <a
+              href={`mailto:${church.Email}?subject=Reserva&body=Hola! Quisiera hacer una reserva`}
+            >
+              Email <EmailIcon />
+            </a>
+          </div>
+        </div>
+
+        {/* <div className='grid-item'>
               <h3>Teléfono</h3>
               <p>{church.Phone}</p>
+              
+              
             </div>
 
             <div className='grid-item'>
               <h3>Correo Electronico</h3>
               <p>{church.Email}</p>
-            </div>
-          </div>
-        </div>
+              
+            </div> */}
 
         {isLoaded ? (
           <GoogleMap
