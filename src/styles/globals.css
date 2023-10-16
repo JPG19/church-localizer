@@ -116,7 +116,7 @@ body {
 html,
 body,
 #__next {
-  height: 100vh;
+  min-height: 100vh;
   width: 100vw;
   overflow-x: hidden;
 }
@@ -369,7 +369,7 @@ label {
   margin: 5px 0;
   color: var(--custom-color-secondary);
   font-size: 0.8rem;
-  text-transform: uppercase;
+  color: #fff;
 }
 
 input {
@@ -659,6 +659,30 @@ main .contact svg {
 .about-us {
   color: white;
 }
+.about-us::before {
+  content: '';
+  display: block;
+  background: url('https://church-localizer.s3.amazonaws.com/vaticano.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  height: 600px;
+  opacity: 0.3;
+  position: absolute;
+  top: 0;
+  width: 100%;
+}
+
+.about-us video {
+  backdrop-filter: blur(0px);
+}
+
+.about-us .mission {
+  padding-top: 5rem;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
 
 .about-us div {
   padding-bottom: 2rem;
@@ -673,7 +697,14 @@ main .contact svg {
 .intro-video {
   display: flex;
   align-items: center;
-  gap: 20px
+  gap: 20px;
+}
+
+@media screen and (max-width: 1224px) {
+  .about-us .mission,
+  .intro-video {
+    flex-wrap: wrap;
+  }
 }
 
 form input:hover {
@@ -689,6 +720,56 @@ form input:hover {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.contact h2 {
+  font-size: 2rem;
+}
+
+.contact label {
+  font-size: 1.2rem;
+}
+
+.contact input {
+  border: 2px solid white;
+}
+
+.contact button {
+  cursor: pointer;
+  background: white;
+  color: black;
+}
+
+.add-section h2 {
+  font-size: 2rem;
+  text-align: center;
+}
+
+.add-section label {
+  font-size: 1.2rem;
+}
+
+.add-section input {
+  border: 2px solid white;
+  margin-bottom: 10px;
+}
+
+.add-section .checkbox-container {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.add-section .checkbox-container input {
+  margin-bottom: 0;
+  width: 25px;
+  height: 25px;
+}
+
+.add-section button {
+  background: white;
+  color: black;
+  margin-bottom: 20px;
 }
 
 /* Auth */
@@ -803,12 +884,6 @@ form input:hover {
   display: flex;
   flex-direction: column;
   justify-content: center;
-}
-
-label {
-  color: #fff;
-  font-weight: 800;
-  font-size: 1.2rem;
 }
 
 .flex-container {

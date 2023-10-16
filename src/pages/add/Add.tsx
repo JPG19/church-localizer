@@ -10,7 +10,7 @@ const Add = () => {
   const [priests, setPriests] = useState<any>([]);
   const [mapPosition, setMapPosition] = useState<any>({
     lat: currentPosition.lat || 0,
-    lng: currentPosition.lng || 0
+    lng: currentPosition.lng || 0,
   });
 
   const { isLoaded } = useLoadScript({
@@ -94,7 +94,8 @@ const Add = () => {
     };
 
     const localUrl = 'http://localhost:8000/api/churches/add';
-    const prodUrl = 'https://api-church-localizer.onrender.com/api/churches/add'
+    const prodUrl =
+      'https://api-church-localizer.onrender.com/api/churches/add';
 
     try {
       const response = await fetch(localUrl, options);
@@ -144,8 +145,8 @@ const Add = () => {
   };
 
   return (
-    <div className=''>
-      <form onSubmit={addChurch} className='grid gap-4 max-w-lg p-5'>
+    <section className='add-section'>
+      <form onSubmit={addChurch} className='max-w-7xl mx-auto p-5'>
         <h2 style={{ color: 'white', fontWeight: '800' }}>
           Agrega una Iglesia
         </h2>
@@ -171,17 +172,27 @@ const Add = () => {
         <label>Capacity</label>
         <input type='number' name='Capacity' required />
 
-        <label>Baptism</label>
-        <input type='checkbox' name='Baptism' />
+        <div className='flex-container'>
+          <div className='checkbox-container'>
+            <label>Baptism</label>
+            <input type='checkbox' name='Baptism' />
+          </div>
 
-        <label>Wedding</label>
-        <input type='checkbox' name='Wedding' />
+          <div className='checkbox-container'>
+            <label>Wedding</label>
+            <input type='checkbox' name='Wedding' />
+          </div>
 
-        <label>FirstCommunion</label>
-        <input type='checkbox' name='FirstCommunion' />
+          <div className='checkbox-container'>
+            <label>FirstCommunion</label>
+            <input type='checkbox' name='FirstCommunion' />
+          </div>
 
-        <label>Confirmation</label>
-        <input type='checkbox' name='Confirmation' />
+          <div className='checkbox-container'>
+            <label>Confirmation</label>
+            <input type='checkbox' name='Confirmation' />
+          </div>
+        </div>
 
         <label>Images:</label>
         <button type='button' onClick={() => addImageInput()}>
@@ -213,15 +224,16 @@ const Add = () => {
           <></>
         )}
 
-        <input
-          style={{ cursor: 'pointer' }}
+        <button
+          style={{ cursor: 'pointer', width: '100%' }}
           type='submit'
-          value='Enviar'
           disabled={result ? true : false}
-        />
+        >
+          Enviar
+        </button>
         {result ? <p className='text-white'>Solicitud enviada</p> : null}
       </form>
-    </div>
+    </section>
   );
 };
 

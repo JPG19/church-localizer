@@ -60,7 +60,7 @@ const Contact = () => {
   };
 
   return (
-    <div className='min-h-screen grid justify-center items-center'>
+    <div className='min-h-screen grid justify-center items-center contact'>
       <motion.form
         initial='hidden'
         animate='visible'
@@ -105,12 +105,13 @@ const Contact = () => {
           <></>
         )}
 
-        <input
+        <button
           style={{ cursor: 'pointer' }}
           type='submit'
-          value='Enviar'
           disabled={result ? true : false}
-        />
+        >
+          Enviar
+        </button>
         {result ? <p className='text-white'>Solicitud enviada</p> : null}
       </motion.form>
     </div>
