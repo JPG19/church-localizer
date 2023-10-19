@@ -4,7 +4,7 @@ import { GoogleMap, useLoadScript, MarkerF } from '@react-google-maps/api';
 import { MyContext } from '../../../src/pages/_app';
 
 const Add = () => {
-  const { currentPosition } = useContext(MyContext);
+  const { user, currentPosition } = useContext(MyContext);
   const [result, setResult] = useState<boolean>(false);
   const [images, setImages] = useState<any>([]);
   const [priests, setPriests] = useState<any>([]);
@@ -12,6 +12,10 @@ const Add = () => {
     lat: currentPosition.lat || 0,
     lng: currentPosition.lng || 0,
   });
+  // If the user doesn't have a photo, he is the administrator
+  const providerPassword =
+    user?.providerData?.length > 0 &&
+    user?.providerData[0]?.providerId === 'password';
 
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY as string,
@@ -143,6 +147,10 @@ const Add = () => {
     // Update the marker's position to the clicked location
     setMapPosition({ lat: e.latLng.lat(), lng: e.latLng.lng() });
   };
+
+  if (!providerPassword) {
+    return null;
+  }
 
   return (
     <section className='add-section'>

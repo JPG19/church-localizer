@@ -51,7 +51,7 @@ const Contact = () => {
     width: '100%',
     maxWidth: '1400px',
     height: '400px',
-    margin: '25px auto',
+    marginBottom: '25px',
   };
 
   const handleMapClick = (e: any) => {
@@ -70,23 +70,26 @@ const Contact = () => {
         }}
         onSubmit={sendEmail}
         className='grid gap-4 max-w-lg p-5'
-        style={{ width: '450px' }}
       >
         <h2 style={{ color: 'white', fontWeight: '800' }}>
           Contacta con nosotros!
         </h2>
         <p className='text-white'>
-          Conoces alguna iglesia que no esta en esta lista? Pone sus datos aca
-          para poder tenerla registrada y vemos si la podemos agregar.
+          Ponte en contacto con nosotros si tiene alguna pregunta acerca del proyecto o si quieres recomendar alguna iglesia que no esta en el listado
         </p>
 
-        <label>Tu nombre</label>
-        <input type='text' name='yourName' required />
+        <label>Nombre</label>
+        <input type='text' name='name' required />
 
-        <label>Tu correo</label>
-        <input type='text' name='yourEmail' required />
+        <label>Correo</label>
+        <input type='email' name='email' required />
 
-        <label>Nombre de la Iglesia</label>
+        <label>Su mensaje</label>
+        <textarea style={{ padding: '6px' }} name='message' required />
+
+        
+
+        {/* <label>Nombre de la Iglesia</label>
         <input type='text' name='churchName' required />
 
         <label>Direccion de la iglesia</label>
@@ -103,7 +106,7 @@ const Contact = () => {
           </GoogleMap>
         ) : (
           <></>
-        )}
+        )} */}
 
         <button
           style={{ cursor: 'pointer' }}

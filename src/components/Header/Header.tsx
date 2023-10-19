@@ -60,10 +60,7 @@ const Header = () => {
   }, [setCurrentPosition]);
 
   // If the user doesn't have a photo, he is the administrator
-  const hasPhoto =
-    user?.providerData?.length > 0 && user?.providerData[0]?.photoURL
-      ? true
-      : false;
+  const providerPassword = user?.providerData?.length > 0 && user?.providerData[0]?.providerId === 'password';
 
   return (
     <header className='p-4 text-white'>
@@ -85,14 +82,14 @@ const Header = () => {
           Contacto
         </Link>
 
-        {hasPhoto ? null : (
+        {providerPassword ? (
           <Link
             className={`${pathname === '/add' ? 'active' : ''}`}
             href='/add'
           >
             Agregar Iglesia
           </Link>
-        )}
+        ) : null}
 
         {user.uid ? (
           <button style={{ marginLeft: 'auto' }} onClick={logout}>
@@ -109,7 +106,7 @@ const Header = () => {
 
         {user.uid ? (
           <>
-            {hasPhoto ? (
+            {!providerPassword ? (
               <Image
                 src={user?.providerData[0]?.photoURL}
                 width={45}
