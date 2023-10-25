@@ -60,7 +60,7 @@ const Contact = () => {
   };
 
   return (
-    <div className='min-h-screen grid justify-center items-center contact'>
+    <div className='grid justify-center items-center contact' style={{ height: '800px' }}>
       <motion.form
         initial='hidden'
         animate='visible'

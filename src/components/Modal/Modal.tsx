@@ -110,7 +110,7 @@ const Modal = ({ setShowModal }: any) => {
 
   return (
     <div className='modal'>
-      <CloseIcon className='close-icon' />
+      <CloseIcon className='close-icon' onClick={() => setShowModal(false)} style={{ cursor: 'pointer' }} />
       <h2>Inicia Sesion</h2>
       <label>Email</label>
       <input ref={emailRef} type='text'></input>
@@ -125,8 +125,8 @@ const Modal = ({ setShowModal }: any) => {
       </p> */}
 
       <div className='alt-login'>
-        <p>Or connect with</p>
-        <GoogleIcon onClick={login} style={{ cursor: 'pointer' }} />
+        <p style={{ padding: '10px' }}>Podes conectarte tambien mediante</p>
+        <GoogleIcon onClick={login} style={{ cursor: 'pointer', fontSize: '2rem' }} />
       </div>
     </div>
   );
