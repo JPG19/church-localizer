@@ -1,11 +1,7 @@
 import Head from 'next/head';
 import { useEffect, useState, useContext, useRef } from 'react';
-import Image from 'next/image';
-import Link from 'next/link';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Grid, Pagination } from 'swiper';
-
 import { MyContext } from '../../src/pages/_app';
+import Slider from '../components/Slider';
 
 // Import Swiper styles
 import 'swiper/css';
@@ -85,19 +81,24 @@ export default function Home({ churches }: any) {
 
   useEffect(() => {
     let newChurches = [];
-    console.log("🚀 ~ file: index.tsx:89 ~ useEffect ~ filter:", filter)
+
     if (filter && filter !== 'distance') {
       // check the filter
       newChurches = churches.filter((church: any) => {
         const value = church[filter] === switchValue ? true : false;
         return value;
       });
-      console.log("🚀 ~ file: index.tsx:95 ~ newChurches=churches.filter ~ newChurches:", newChurches)
+
       setFilteredChurches(newChurches);
+    }
+    else if (!filter) {
+      // Reset the list will all Churches
+      setFilteredChurches(churches)
     }
   }, [switchValue, filter, churches]);
 
   const churchesToDisplay = filter !== 'all' ? filteredChurches : churches;
+  console.log("🚀 ~ Home ~ churchesToDisplay:", churchesToDisplay)
 
   return (
     <>
@@ -108,8 +109,8 @@ export default function Home({ churches }: any) {
         <link rel='icon' href='/favicon.ico' />
       </Head>
 
-      <main className='max-w-7xl mx-auto p-5'>
-        <div className='title-container'>
+      <main className='max-w-7xl mx-auto p-5 w-full'>
+        <div className='title-container' style={{ maxWidth: '1200px', margin: 'auto' }}>
           <h1 className='text-2xl mb-8'>Localizador de Iglesias</h1>
 
           <div className='search-input'>
@@ -178,60 +179,9 @@ export default function Home({ churches }: any) {
             ) : null}
           </div>
         </div>
-
-        <Swiper
-          // install Swiper modules
-          modules={[Grid, Pagination]}
-          grid={{
-            rows: 2,
-            fill: 'row',
-          }}
-          spaceBetween={30}
-          pagination={{ clickable: true }}
-          breakpoints={{
-            // when window width is >= 80px
-            300: {
-              slidesPerView: 1,
-              spaceBetween: 30,
-            },
-            850: {
-              slidesPerView: 2,
-              spaceBetween: 30,
-            },
-          }}
-        >
-          {churchesToDisplay.map((church: any) => {
-            const src = church.Images
-              ? church.Images[0]
-              : '/images/placeholder.png';
-            return (
-              <SwiperSlide
-                className='rounded-tl-3xl rounded-tr-3xl h-96'
-                key={church.ChurchId}
-              >
-                <Link
-                  href={`/churches/${church.ChurchId}`}
-                  key={church.ChurchId}
-                >
-                  <Image
-                    src={src}
-                    alt={church.Name}
-                    width={200}
-                    height={300}
-                    priority={true}
-                    style={{ height: '300px', width: '100%' }}
-                  />
-
-                  <div className='p-2 text-white rounded-b-lg h-20 bg-red-900'>
-                    <h3>{church.Name}</h3>
-                    <p>{church.Schedule}</p>
-                  </div>
-                </Link>
-              </SwiperSlide>
-            );
-          })}
-
-          {churchesToDisplay.length === 0 ? (
+        {churchesToDisplay.length > 0 ? <Slider content={churchesToDisplay} /> : null}
+        {churchesToDisplay.length === 0 ? (
+          <div style={{ maxWidth: '1200px', margin: 'auto', marginTop: '2rem' }}>
             <h2
               style={{
                 color: 'white',
@@ -240,8 +190,9 @@ export default function Home({ churches }: any) {
             >
               No hay Iglesias para mostrar
             </h2>
-          ) : null}
-        </Swiper>
+          </div>
+
+        ) : null}
       </main>
     </>
   );
