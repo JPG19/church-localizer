@@ -44,8 +44,8 @@ export default function Home({ churches }: any) {
     setSwitchValue(false);
   };
 
-  const handleDistanceFilter = (e: any) => {
-    const value = parseInt(e.target.value);
+  const handleDistanceFilter = (valueString: any) => {
+    const value = parseInt(valueString);
     const filtered = churches.filter((church: any) => {
       const [churchALatitude, churchALongitude] = church.Location.replaceAll(
         ' ',
@@ -81,8 +81,11 @@ export default function Home({ churches }: any) {
 
   useEffect(() => {
     let newChurches = [];
-
-    if (filter && filter !== 'distance') {
+    if (filter && filter === "distance") {
+      // distance was just toggled, search the first item of the distances which is 2km
+      handleDistanceFilter("2")
+    }
+    else if (filter && filter !== 'distance') {
       // check the filter
       newChurches = churches.filter((church: any) => {
         const value = church[filter] === switchValue ? true : false;
@@ -133,7 +136,7 @@ export default function Home({ churches }: any) {
                 name='range'
                 id='range'
                 className='bg-transparent text-black p-2 text-base border border-gray-300 rounded-md w-40'
-                onChange={(e) => handleDistanceFilter(e)}
+                onChange={(e) => handleDistanceFilter(e.target?.value)}
               >
                 <option value='' disabled>
                   Elige un rango
