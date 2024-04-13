@@ -208,13 +208,13 @@ const Church = ({ church }: { church: ChurchType }) => {
 
             <div className='grid-item'>
               <h3>Sacerdotes</h3>
-              <p>{church.Priests}</p>
+              <p>{church.Priests.join(', ')}</p>
             </div>
           </div>
         </div>
 
         <div className='pt-5 contact'>
-          <h3>Haz una reserva</h3>
+          <h3 style={{ fontWeight: '700' }}>Haz una reserva</h3>
 
           <div className='flex-container'>
             <a href={`tel:${church.Phone}`}>

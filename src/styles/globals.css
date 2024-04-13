@@ -929,6 +929,15 @@ form input:hover {
   animation: spin 1s linear infinite;
 }
 
+.swiper-slide {
+  box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.8);
+  transition: 0.3s;
+
+  &:hover {
+    transform: scale(1.02);
+  }
+}
+
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
