@@ -57,8 +57,8 @@ const Slider = ({ content = [] }: any) => {
                                     <Image
                                         src={src}
                                         alt={church.Name}
-                                        width={200}
-                                        height={300}
+                                        width={500}
+                                        height={600}
                                         priority={true}
                                         style={{ height: '300px', width: '100%' }}
                                     />

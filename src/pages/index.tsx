@@ -101,7 +101,6 @@ export default function Home({ churches }: any) {
   }, [switchValue, filter, churches]);
 
   const churchesToDisplay = filter !== 'all' ? filteredChurches : churches;
-  console.log("🚀 ~ Home ~ churchesToDisplay:", churchesToDisplay)
 
   return (
     <>
