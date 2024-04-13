@@ -126,8 +126,9 @@ const Church = ({ church }: { church: ChurchType }) => {
           spaceBetween={30}
           pagination={{ clickable: true }}
         >
-          {church.Images.map((src: string, index) => (
-            <SwiperSlide key={index}>
+          {church.Images.map((src: string, index) => {
+            if (src) {
+              return <SwiperSlide key={index}>
               <Image
                 src={src}
                 alt={church.Name}
@@ -136,7 +137,8 @@ const Church = ({ church }: { church: ChurchType }) => {
                 priority={true}
               />
             </SwiperSlide>
-          ))}
+            }
+          })}
         </Swiper>
 
         <div className='pt-5'>
