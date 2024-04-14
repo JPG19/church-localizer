@@ -24,7 +24,6 @@ const Header = () => {
   const router = useRouter();
   const { pathname } = router;
   const { user, setUser, setCurrentPosition } = useContext(MyContext);
-  console.log('🚀 ~ file: Header.tsx:26 ~ Header ~ user:', user);
   const [showModal, setShowModal] = useState(false);
 
   const logout = () => {

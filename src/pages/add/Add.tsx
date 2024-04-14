@@ -5,9 +5,11 @@ import { MyContext } from '../../../src/pages/_app';
 
 const Add = () => {
   const { user, currentPosition } = useContext(MyContext);
-  const [result, setResult] = useState<boolean>(false);
+  const [churchSent, setChurchSent] = useState<boolean>(false);
   const [images, setImages] = useState<any>([]);
   const [priests, setPriests] = useState<any>([]);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [errorMessage, setErrorMessage] = useState<string>("");
   const [mapPosition, setMapPosition] = useState<any>({
     lat: currentPosition.lat || 0,
     lng: currentPosition.lng || 0,
@@ -29,25 +31,42 @@ const Add = () => {
   };
 
   const addChurch = async (e: any) => {
+    setLoading(true)
     e.preventDefault();
 
     const formData = new FormData(e.target);
-    formData.append('Reviews', {} as any);
-    formData.append('SocialLinks', {} as any);
+    formData.append('Reviews', "" as any);
+    formData.append('SocialLinks', "" as any);
     formData.append('Location', `${mapPosition.lat}, ${mapPosition.lng}`);
 
     // Check if the checkbox is unchecked and, if so, add it to the formData with a value of false
     if (!formData.has('Baptism')) {
       formData.append('Baptism', false as any);
     }
+    else {
+      formData.append('Baptism', true as any);
+    }
+
     if (!formData.has('Confirmation')) {
       formData.append('Confirmation', false as any);
     }
+    else {
+      formData.append('Baptism', true as any);
+    }
+
+
     if (!formData.has('FirstCommunion')) {
       formData.append('FirstCommunion', false as any);
     }
+    else {
+      formData.append('FirstCommunion', true as any);
+    }
+
     if (!formData.has('Wedding')) {
       formData.append('Wedding', false as any);
+    }
+    else {
+      formData.append('Wedding', true as any);
     }
 
     const imageInputContainer = document.getElementById('images-container');
@@ -81,32 +100,36 @@ const Add = () => {
     });
 
     // You now have the form data as a JSON object
-    console.log(jsonObject);
-
-    // e.target.reset();
-    // setResult(true);
-    // setTimeout(() => {
-    //   setResult(false);
-    // }, 4000);
 
     const options = {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json', // Set the content type based on your API's requirements
+        'Accept': 'application/json, text/plain, */*',
+        'Content-Type': 'application/json'
       },
       body: JSON.stringify(jsonObject), // Convert data to a JSON string
     };
 
     const localUrl = 'http://localhost:8000/api/churches/add';
-    const prodUrl =
-      'https://api-church-localizer.onrender.com/api/churches/add';
+    // const prodUrl =
+    //   'https://api-church-localizer.onrender.com/api/churches/add';
 
     try {
       const response = await fetch(localUrl, options);
       const data = await response.json();
-      console.log('🚀 ~ file: Add.tsx:85 ~ addChurch ~ data:', data);
+      setLoading(false)
+
+      if (data.message === "ChurchId already exists") {
+        setErrorMessage("Una iglesia con ese mismo ID ya existe")
+      }
+
+      if (data.success === true) {
+        setChurchSent(true)
+        setErrorMessage("")
+      }
     } catch (e) {
       console.error('POST request failed:', e);
+      setLoading(false)
     }
   };
 
@@ -171,38 +194,38 @@ const Add = () => {
         <label>Email</label>
         <input type='email' name='Email' required />
 
-        <label>Schedule</label>
+        <label>Horarios</label>
         <input type='text' name='Schedule' required />
 
-        <label>Health Protocol</label>
+        <label>Protocolo de Salud</label>
         <input type='text' name='HealthProtocol' required />
 
-        <label>Capacity</label>
+        <label>Capacidad</label>
         <input type='number' name='Capacity' required />
 
         <div className='flex-container'>
           <div className='checkbox-container'>
-            <label>Baptism</label>
+            <label>Bautismo</label>
             <input type='checkbox' name='Baptism' />
           </div>
 
           <div className='checkbox-container'>
-            <label>Wedding</label>
+            <label>Casamiento</label>
             <input type='checkbox' name='Wedding' />
           </div>
 
           <div className='checkbox-container'>
-            <label>FirstCommunion</label>
+            <label>Primera Comunión</label>
             <input type='checkbox' name='FirstCommunion' />
           </div>
 
           <div className='checkbox-container'>
-            <label>Confirmation</label>
+            <label>Confirmación</label>
             <input type='checkbox' name='Confirmation' />
           </div>
         </div>
 
-        <label>Images:</label>
+        <label>Imagenes:</label>
         <button type='button' onClick={() => addImageInput()}>
           Agregar Imagen
         </button>
@@ -235,11 +258,12 @@ const Add = () => {
         <button
           style={{ cursor: 'pointer', width: '100%' }}
           type='submit'
-          disabled={result ? true : false}
+          disabled={loading ? true : false}
         >
-          Enviar
+          {loading ? "Enviando..." : "Enviar"}
         </button>
-        {result ? <p className='text-white'>Solicitud enviada</p> : null}
+        {errorMessage ? <p style={{ color: 'red', textAlign: 'center' }}>{errorMessage}</p> : null}
+        {churchSent ? <p style={{ color: 'lightgreen', textAlign: 'center' }}>Iglesia Agregada</p> : null}
       </form>
     </section>
   );
