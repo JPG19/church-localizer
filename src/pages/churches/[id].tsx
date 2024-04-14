@@ -1,4 +1,4 @@
-import { useState, useMemo, useContext } from 'react';
+import { useState, useMemo, useContext, useEffect } from 'react';
 import Image from 'next/image';
 import { GoogleMap, useLoadScript, MarkerF } from '@react-google-maps/api';
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -56,6 +56,12 @@ const Church = ({ church }: { church: ChurchType }) => {
     height: '400px',
     margin: '25px auto',
   };
+
+  useEffect(() => {
+    if (church.Reviews) {
+      setReviews(church.Reviews)
+    }
+  }, [church])
 
   const biggerThanLaptop = useMediaQuery({ query: '(min-width: 1024px)' });
 
