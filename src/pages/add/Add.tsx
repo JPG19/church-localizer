@@ -110,12 +110,12 @@ const Add = () => {
       body: JSON.stringify(jsonObject), // Convert data to a JSON string
     };
 
-    const localUrl = 'http://localhost:8000/api/churches/add';
-    // const prodUrl =
-    //   'https://api-church-localizer.onrender.com/api/churches/add';
+    // const localUrl = 'http://localhost:8000/api/churches/add';
+    const prodUrl =
+      'https://api-church-localizer.onrender.com/api/churches/add';
 
     try {
-      const response = await fetch(localUrl, options);
+      const response = await fetch(prodUrl, options);
       const data = await response.json();
       setLoading(false)
 
